@@ -73,7 +73,7 @@ export default function TimelinePage() {
                 <div className={styles.phaseDuration}>⏱️ Duration: ~{phase.durationDays} days</div>
 
                 {expandedPhase === phase.id && (
-                  <div className={styles.phaseDetails}>
+                  <div className={`${styles.phaseDetails} animate-fade-in`}>
                     <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-md)', lineHeight: 1.7 }}>
                       {phase.details}
                     </p>
