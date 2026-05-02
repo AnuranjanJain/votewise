@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAppContext } from '@/components/AppProvider';
 import styles from './page.module.css';
@@ -22,8 +23,8 @@ const features = [
   },
   {
     icon: '🗺️', title: 'Polling Station Finder',
-    desc: 'Find your nearest polling station on an interactive map. Get accessibility info, facilities, and directions — powered by Google Maps.',
-    href: '/map', tag: 'Google Maps',
+    desc: 'Find your nearest polling station on an interactive map. Get accessibility info, facilities, and directions.',
+    href: '/map', tag: 'Maps',
   },
   {
     icon: '📚', title: 'Learn & Resources',
@@ -38,24 +39,33 @@ const features = [
 ];
 
 const googleServices = [
-  { icon: '🧠', name: 'Gemini AI (Chat)', desc: 'Election Buddy chatbot' },
-  { icon: '🎯', name: 'Gemini AI (Quiz)', desc: 'AI-generated questions' },
-  { icon: '📖', name: 'Gemini AI (Simplify)', desc: 'Text simplification' },
-  { icon: '🌐', name: 'Gemini AI (Translate)', desc: 'Multi-language support' },
-  { icon: '✅', name: 'Gemini AI (Fact-Check)', desc: 'Claim verification' },
-  { icon: '🗺️', name: 'Google Maps JS API', desc: 'Polling station map' },
-  { icon: '📍', name: 'Geocoding API', desc: 'Address lookup' },
-  { icon: '🏪', name: 'Places API', desc: 'Nearby govt offices' },
-  { icon: '🔊', name: 'Cloud Text-to-Speech', desc: 'Read-aloud accessibility' },
-  { icon: '🌍', name: 'Cloud Translation', desc: 'Native translations' },
-  { icon: '📺', name: 'YouTube Data API', desc: 'Education videos' },
-  { icon: '🔥', name: 'Firebase Firestore', desc: 'Quiz & progress data' },
-  { icon: '🔐', name: 'Firebase Auth', desc: 'Anonymous authentication' },
-  { icon: '📊', name: 'Firebase Analytics', desc: 'Engagement tracking' },
+  { icon: '🧠', name: 'Gemini AI' },
+  { icon: '🗺️', name: 'Google Maps API' },
+  { icon: '📍', name: 'Geocoding & Places' },
+  { icon: '🔊', name: 'Cloud Text-to-Speech' },
+  { icon: '🌍', name: 'Cloud Translation' },
+  { icon: '📺', name: 'YouTube API' },
+  { icon: '🔥', name: 'Firebase Platform' },
 ];
 
 export default function HomePage() {
   const { progress } = useAppContext();
+  
+  // Custom hook for scroll reveal animation
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add(styles.active);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const revealElements = document.querySelectorAll(`.${styles.reveal}`);
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => revealElements.forEach((el) => observer.unobserve(el));
+  }, []);
 
   return (
     <div className="page-content">
@@ -63,29 +73,23 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroBg} />
         <div className={styles.heroGlow} />
-        
-        {/* 3D Decorators */}
-        <div className={styles.decorator1} aria-hidden="true">🌐</div>
-        <div className={styles.decorator2} aria-hidden="true">⚡</div>
-        <div className={styles.decorator3} aria-hidden="true">🎯</div>
 
         <div className={styles.heroContent}>
           <div className={styles.heroEmoji}>🗳️</div>
           <h1 className={styles.heroTitle}>
-            Your AI-Powered{' '}
-            <span className={styles.heroTitleGradient}>Guide to Democracy</span>
+            Welcome to <span className={styles.heroTitleGradient}>VoteWise</span>
           </h1>
           <p className={styles.heroSubtitle}>
-            Understand the Indian election process from start to finish.
-            Interactive timelines, AI chat, quizzes, and everything you need
-            to be an informed citizen.
+            Your friendly, easy-to-understand guide to the Indian election process.
+            Explore interactive timelines, chat with our AI guide, take quizzes, and
+            become a confident, informed citizen.
           </p>
           <div className={styles.heroCTAs}>
             <Link href="/chat" className="btn btn-primary btn-lg" id="hero-chat-btn">
               🤖 Talk to Election Buddy
             </Link>
             <Link href="/timeline" className="btn btn-secondary btn-lg" id="hero-timeline-btn">
-              📅 Explore Timeline
+              📅 Explore the Timeline
             </Link>
           </div>
           <div className={styles.heroStats}>
@@ -101,16 +105,12 @@ export default function HomePage() {
               <div className={styles.statValue}>8</div>
               <div className={styles.statLabel}>Election Phases</div>
             </div>
-            <div className={styles.stat}>
-              <div className={styles.statValue}>AI</div>
-              <div className={styles.statLabel}>Powered by Gemini</div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* Democracy Score */}
-      <section className={styles.progressSection}>
+      <section className={`${styles.progressSection} ${styles.reveal}`}>
         <div className={styles.progressCard}>
           <div className={styles.progressTitle}>🏛️ Your Democracy Score</div>
           <div className={styles.progressValue}>{progress.democracyScore}%</div>
@@ -121,7 +121,7 @@ export default function HomePage() {
                 ? 'You\'re a democracy champion! 🏆'
                 : 'Keep exploring to increase your score!'}
           </div>
-          <div className="progress-bar" style={{ maxWidth: '400px', margin: '16px auto 0' }}>
+          <div className="progress-bar" style={{ maxWidth: '400px', margin: '24px auto 0' }}>
             <div
               className="progress-fill"
               style={{
@@ -135,13 +135,14 @@ export default function HomePage() {
 
       {/* Feature Cards */}
       <section className={styles.features} id="features">
-        <h2 className={styles.featuresTitle}>Everything You Need to Understand Elections</h2>
+        <h2 className={`${styles.featuresTitle} ${styles.reveal}`}>Everything You Need to Understand Elections</h2>
         <div className={styles.featuresGrid}>
           {features.map((feature, i) => (
             <Link
               key={feature.title}
               href={feature.href}
-              className={`${styles.featureCard} animate-fade-in-up stagger-${i + 1}`}
+              className={`${styles.featureCard} ${styles.reveal}`}
+              style={{ transitionDelay: `${i * 0.1}s` }}
               id={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
             >
               <span className={styles.featureIcon}>{feature.icon}</span>
@@ -153,15 +154,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Google Services */}
-      <section className={styles.services}>
-        <h2 className={styles.featuresTitle}>Powered by 14 Google Services</h2>
+      {/* Softened Google Services */}
+      <section className={`${styles.services} ${styles.reveal}`}>
+        <h2 className={styles.servicesTitle}>Built securely with</h2>
         <div className={styles.servicesGrid}>
-          {googleServices.map(service => (
-            <div key={service.name} className={styles.serviceCard}>
-              <div className={styles.serviceIcon}>{service.icon}</div>
-              <div className={styles.serviceName}>{service.name}</div>
-              <div className={styles.serviceDesc}>{service.desc}</div>
+          {googleServices.map((service, i) => (
+            <div 
+              key={service.name} 
+              className={`${styles.servicePill} ${styles.reveal}`}
+              style={{ transitionDelay: `${i * 0.05}s` }}
+            >
+              <span>{service.icon}</span>
+              <span>{service.name}</span>
             </div>
           ))}
         </div>
