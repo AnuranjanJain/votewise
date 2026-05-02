@@ -1,0 +1,30 @@
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-md); }
+.header { text-align: center; margin-bottom: var(--space-2xl); }
+.title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; margin-bottom: var(--space-sm); }
+.subtitle { color: var(--color-text-secondary); font-size: 0.95rem; }
+.timeline { position: relative; padding: var(--space-xl) 0; }
+.timelineLine { position: absolute; left: 32px; top: 0; bottom: 0; width: 3px; background: var(--color-border); border-radius: 2px; }
+.timelineLineFill { width: 100%; border-radius: 2px; background: var(--gradient-primary); transition: height var(--transition-slow); }
+.phase { position: relative; padding-left: 80px; margin-bottom: var(--space-xl); animation: fadeInUp 0.5s ease forwards; }
+.phaseMarker { position: absolute; left: 16px; top: 0; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; border: 3px solid var(--color-border); background: var(--color-bg-primary); z-index: 2; transition: all var(--transition-base); }
+.phaseMarkerCompleted { border-color: var(--color-success); background: var(--color-success-bg); }
+.phaseMarkerActive { border-color: var(--color-accent); background: rgba(212,168,67,0.1); box-shadow: var(--shadow-glow); animation: pulse-dot 2s ease infinite; }
+.phaseMarkerUpcoming { border-color: var(--color-border); opacity: 0.6; }
+.phaseCard { background: var(--color-bg-glass); backdrop-filter: blur(12px); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); cursor: pointer; transition: all var(--transition-base); }
+.phaseCard:hover { border-color: var(--color-border-hover); box-shadow: var(--shadow-md); }
+.phaseCardActive { border-color: var(--color-accent); box-shadow: var(--shadow-glow); }
+.phaseHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-sm); }
+.phaseTitle { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; }
+.phaseStatus { padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+.statusCompleted { background: var(--color-success-bg); color: var(--color-success); }
+.statusActive { background: rgba(212,168,67,0.1); color: var(--color-accent); }
+.statusUpcoming { background: var(--color-bg-tertiary); color: var(--color-text-muted); }
+.phaseDesc { font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.6; }
+.phaseDetails { margin-top: var(--space-md); padding-top: var(--space-md); border-top: 1px solid var(--color-border); animation: fadeIn 0.3s ease; }
+.detailSection { margin-bottom: var(--space-md); }
+.detailLabel { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-accent); margin-bottom: var(--space-sm); }
+.detailList { display: flex; flex-direction: column; gap: 6px; }
+.detailItem { font-size: 0.85rem; color: var(--color-text-secondary); padding-left: var(--space-md); position: relative; }
+.detailItem::before { content: '•'; position: absolute; left: 0; color: var(--color-accent); font-weight: bold; }
+.phaseDuration { display: inline-flex; align-items: center; gap: 4px; font-size: 0.8rem; color: var(--color-text-muted); margin-top: var(--space-sm); }
+@media (max-width: 768px) { .phase { padding-left: 60px; } .phaseMarker { left: 8px; width: 28px; height: 28px; font-size: 0.8rem; } .timelineLine { left: 22px; } }
