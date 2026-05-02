@@ -34,6 +34,11 @@
 .factCard:nth-child(4n+3) { background: #fdf4ff; border-color: #fae8ff; }
 .factCard:nth-child(4n+4) { background: #fffbeb; border-color: #fef3c7; }
 
+:global(html[data-theme='dark']) .factCard:nth-child(4n+1) { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
+:global(html[data-theme='dark']) .factCard:nth-child(4n+2) { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); }
+:global(html[data-theme='dark']) .factCard:nth-child(4n+3) { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); }
+:global(html[data-theme='dark']) .factCard:nth-child(4n+4) { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
+
 .factIcon { font-size: 2rem; margin-bottom: var(--space-md); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
 .factTitle { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; margin-bottom: var(--space-sm); color: var(--color-text-primary); }
 .factContent { font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: var(--space-md); }
@@ -89,6 +94,10 @@
 .videoCard:nth-child(3n+1) .videoThumb { background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%); }
 .videoCard:nth-child(3n+2) .videoThumb { background: linear-gradient(135deg, #fae8ff 0%, #d8b4fe 100%); }
 .videoCard:nth-child(3n+3) .videoThumb { background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%); }
+
+:global(html[data-theme='dark']) .videoCard:nth-child(3n+1) .videoThumb { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.4) 100%); }
+:global(html[data-theme='dark']) .videoCard:nth-child(3n+2) .videoThumb { background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.4) 100%); }
+:global(html[data-theme='dark']) .videoCard:nth-child(3n+3) .videoThumb { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.4) 100%); }
 
 .videoPlayIcon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: all var(--transition-base); }
 .videoCard:hover .videoPlayIcon { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
