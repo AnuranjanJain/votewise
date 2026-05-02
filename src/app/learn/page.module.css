@@ -1,31 +1,106 @@
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-md); }
-.header { text-align: center; margin-bottom: var(--space-xl); }
-.title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; margin-bottom: var(--space-sm); }
-.subtitle { color: var(--color-text-secondary); font-size: 0.95rem; }
-.tabs { display: flex; gap: var(--space-sm); margin-bottom: var(--space-xl); overflow-x: auto; padding-bottom: var(--space-sm); }
-.tab { padding: 10px 20px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; background: var(--color-bg-glass); border: 1px solid var(--color-border); color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
-.tab:hover { border-color: var(--color-border-hover); color: var(--color-text-primary); }
-.tabActive { background: rgba(212,168,67,0.1); border-color: var(--color-accent); color: var(--color-accent); }
-.factsGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-2xl); }
-.factCard { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); transition: all var(--transition-base); }
-.factCard:hover { border-color: var(--color-border-hover); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.factIcon { font-size: 1.5rem; margin-bottom: var(--space-sm); }
-.factTitle { font-family: var(--font-display); font-size: 1rem; font-weight: 600; margin-bottom: var(--space-xs); }
-.factContent { font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: var(--space-sm); }
-.factSource { font-size: 0.75rem; color: var(--color-text-muted); }
-.glossarySearch { margin-bottom: var(--space-lg); }
-.glossaryInput { width: 100%; padding: 12px 16px; border-radius: var(--radius-lg); background: var(--color-bg-glass); border: 1px solid var(--color-border); color: var(--color-text-primary); font-size: 0.9rem; }
+.header { text-align: center; margin-bottom: var(--space-xl); position: relative; }
+.header::after { content: ''; position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: var(--gradient-secondary); border-radius: var(--radius-full); }
+.title { font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; margin-bottom: var(--space-sm); color: var(--color-text-primary); letter-spacing: -0.02em; }
+.subtitle { color: var(--color-text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+.tabs { display: flex; justify-content: center; gap: var(--space-sm); margin-bottom: var(--space-2xl); overflow-x: auto; padding-bottom: var(--space-sm); margin-top: var(--space-xl); }
+.tab { 
+  padding: 12px 24px; border-radius: var(--radius-full); 
+  font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; 
+  background: var(--color-bg-card); border: 1px solid var(--color-border); 
+  color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition-spring); 
+  white-space: nowrap; box-shadow: var(--shadow-sm);
+}
+.tab:hover { border-color: var(--color-border-hover); color: var(--color-text-primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.tabActive { background: var(--color-info-bg); border-color: rgba(37,99,235,0.2); color: var(--brand-blue); box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+
+/* Pastel Masonry Facts Grid */
+.factsGrid { 
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+  gap: var(--space-lg); margin-bottom: var(--space-2xl); align-items: start;
+}
+.factCard { 
+  background: var(--color-bg-card); border: 1px solid var(--color-border); 
+  border-radius: var(--radius-xl); padding: var(--space-xl); 
+  transition: all var(--transition-spring); box-shadow: var(--shadow-sm);
+  position: relative; overflow: hidden;
+}
+.factCard:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: rgba(0,0,0,0.1); }
+
+/* Colorful background variations for facts */
+.factCard:nth-child(4n+1) { background: #f0fdf4; border-color: #dcfce7; }
+.factCard:nth-child(4n+2) { background: #eff6ff; border-color: #dbeafe; }
+.factCard:nth-child(4n+3) { background: #fdf4ff; border-color: #fae8ff; }
+.factCard:nth-child(4n+4) { background: #fffbeb; border-color: #fef3c7; }
+
+.factIcon { font-size: 2rem; margin-bottom: var(--space-md); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+.factTitle { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; margin-bottom: var(--space-sm); color: var(--color-text-primary); }
+.factContent { font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: var(--space-md); }
+.factSource { font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; padding: 4px 10px; background: rgba(0,0,0,0.05); border-radius: var(--radius-full); }
+
+/* Glossary Flashcards */
+.glossarySearch { margin-bottom: var(--space-xl); max-width: 600px; margin-left: auto; margin-right: auto; position: relative; }
+.glossaryInput { 
+  width: 100%; padding: 16px 24px; border-radius: var(--radius-full); 
+  background: var(--color-bg-card); border: 2px solid var(--color-border); 
+  color: var(--color-text-primary); font-size: 1rem; font-family: var(--font-display); font-weight: 500;
+  box-shadow: var(--shadow-sm); transition: all var(--transition-base);
+}
+.glossaryInput:focus { outline: none; border-color: var(--brand-blue); box-shadow: var(--shadow-glow); }
 .glossaryInput::placeholder { color: var(--color-text-muted); }
-.glossaryGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-2xl); }
-.glossaryCard { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); }
-.glossaryTerm { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--color-accent); margin-bottom: 4px; }
-.glossaryDef { font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.6; }
-.glossaryCategory { font-size: 0.7rem; color: var(--color-text-muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-.sectionTitle { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-bottom: var(--space-lg); display: flex; align-items: center; gap: var(--space-sm); }
-.videosGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
-.videoCard { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: all var(--transition-base); }
-.videoCard:hover { border-color: var(--color-border-hover); box-shadow: var(--shadow-md); }
-.videoThumb { height: 160px; background: var(--color-bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-.videoInfo { padding: var(--space-md); }
-.videoTitle { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
-.videoChannel { font-size: 0.8rem; color: var(--color-text-muted); }
+
+.glossaryGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-2xl); }
+.glossaryCard { 
+  background: var(--color-bg-card); border: 1px solid var(--color-border); 
+  border-radius: var(--radius-lg); padding: var(--space-lg); 
+  transition: all var(--transition-spring); box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; height: 100%;
+}
+.glossaryCard:hover { border-color: var(--color-border-hover); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.glossaryTerm { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--brand-blue); margin-bottom: 8px; }
+.glossaryDef { font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6; flex-grow: 1; }
+.glossaryCategory { 
+  font-size: 0.7rem; font-weight: 700; color: var(--color-text-muted); 
+  margin-top: 12px; text-transform: uppercase; letter-spacing: 0.05em; 
+  padding-top: 12px; border-top: 1px solid var(--color-border);
+}
+
+.sectionTitle { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; margin-bottom: var(--space-xl); text-align: center; color: var(--color-text-primary); }
+
+/* Video Gallery Media Cards */
+.videosGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-xl); margin-bottom: var(--space-2xl); }
+.videoCard { 
+  background: var(--color-bg-card); border: 1px solid var(--color-border); 
+  border-radius: var(--radius-xl); overflow: hidden; 
+  transition: all var(--transition-spring); box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+.videoCard:hover { box-shadow: var(--shadow-lg); transform: translateY(-6px); border-color: rgba(0,0,0,0.1); }
+.videoCard:hover .videoThumb { transform: scale(1.05); }
+
+.videoThumbWrapper { overflow: hidden; position: relative; }
+.videoThumb { 
+  height: 180px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); 
+  display: flex; align-items: center; justify-content: center; font-size: 3rem; 
+  transition: transform var(--transition-slow);
+}
+/* Generate some colorful gradients for the video thumbnails using pseudo-classes based on child index */
+.videoCard:nth-child(3n+1) .videoThumb { background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%); }
+.videoCard:nth-child(3n+2) .videoThumb { background: linear-gradient(135deg, #fae8ff 0%, #d8b4fe 100%); }
+.videoCard:nth-child(3n+3) .videoThumb { background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%); }
+
+.videoPlayIcon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: all var(--transition-base); }
+.videoCard:hover .videoPlayIcon { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+.videoPlayIcon::after { content: '▶'; color: var(--brand-blue); font-size: 1.2rem; margin-left: 4px; }
+
+.videoInfo { padding: var(--space-lg); background: var(--color-bg-card); position: relative; z-index: 2; }
+.videoTitle { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; color: var(--color-text-primary); }
+.videoChannel { font-size: 0.85rem; font-weight: 600; color: var(--brand-purple); display: flex; align-items: center; gap: 6px; }
+.videoChannel::before { content: '👤'; font-size: 0.9rem; }
+
+@media (max-width: 768px) {
+  .title { font-size: 2rem; }
+  .tabs { justify-content: flex-start; padding: 0 var(--space-md); }
+  .glossarySearch { padding: 0 var(--space-md); }
+}

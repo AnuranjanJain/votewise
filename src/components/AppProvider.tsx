@@ -26,7 +26,7 @@ const defaultProgress: LearningProgress = {
 };
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>('light');
   const [isLoading, setIsLoading] = useState(true);
   const [accessibility, setAccessibility] = useState<AccessibilitySettings>({
     highContrast: false, largeText: false, reducedMotion: false, screenReader: false,

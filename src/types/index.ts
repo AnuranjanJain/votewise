@@ -20,6 +20,7 @@ export interface TimelinePhase {
   icon: string;
   order: number;
   status: PhaseStatus;
+  demoDate?: string;
 }
 
 export interface QuizQuestion {

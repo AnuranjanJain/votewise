@@ -58,6 +58,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '📢',
     order: 1,
     status: 'completed',
+    demoDate: 'March 16, 2024',
   },
   {
     id: 'nomination',
@@ -82,6 +83,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '📝',
     order: 2,
     status: 'completed',
+    demoDate: 'March 20 - May 14, 2024',
   },
   {
     id: 'scrutiny',
@@ -104,6 +106,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '🔍',
     order: 3,
     status: 'completed',
+    demoDate: 'March 21 - May 15, 2024',
   },
   {
     id: 'campaigning',
@@ -130,6 +133,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '📣',
     order: 4,
     status: 'active',
+    demoDate: 'March 16 - May 30, 2024',
   },
   {
     id: 'polling',
@@ -156,6 +160,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '🗳️',
     order: 5,
     status: 'upcoming',
+    demoDate: 'April 19 - June 1, 2024',
   },
   {
     id: 'counting',
@@ -180,6 +185,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '📊',
     order: 6,
     status: 'upcoming',
+    demoDate: 'June 4, 2024',
   },
   {
     id: 'results',
@@ -203,6 +209,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '🏆',
     order: 7,
     status: 'upcoming',
+    demoDate: 'June 4-5, 2024',
   },
   {
     id: 'formation',
@@ -227,6 +234,7 @@ export const electionTimelinePhases: TimelinePhase[] = [
     icon: '🏛️',
     order: 8,
     status: 'upcoming',
+    demoDate: 'June 9, 2024',
   },
 ];
 

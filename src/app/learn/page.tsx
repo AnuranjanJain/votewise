@@ -110,7 +110,10 @@ export default function LearnPage() {
             <div className={styles.videosGrid}>
               {fallbackVideos.map((video, i) => (
                 <div key={i} className={`${styles.videoCard} animate-fade-in-up stagger-${Math.min(i + 1, 6)}`}>
-                  <div className={styles.videoThumb}>{video.icon}</div>
+                  <div className={styles.videoThumbWrapper}>
+                    <div className={styles.videoThumb}>{video.icon}</div>
+                    <div className={styles.videoPlayIcon}></div>
+                  </div>
                   <div className={styles.videoInfo}>
                     <div className={styles.videoTitle}>{video.title}</div>
                     <div className={styles.videoChannel}>{video.channel}</div>

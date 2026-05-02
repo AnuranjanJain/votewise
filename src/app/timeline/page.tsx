@@ -49,9 +49,16 @@ export default function TimelinePage() {
                 onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpandedPhase(expandedPhase === phase.id ? null : phase.id); }}}
               >
                 <div className={styles.phaseHeader}>
-                  <h3 className={styles.phaseTitle}>
-                    {phase.icon} {phase.title}
-                  </h3>
+                  <div className={styles.phaseTitleContainer}>
+                    <h3 className={styles.phaseTitle}>
+                      {phase.icon} {phase.title}
+                    </h3>
+                    {phase.demoDate && (
+                      <span className={styles.phaseDate}>
+                        📅 {phase.demoDate}
+                      </span>
+                    )}
+                  </div>
                   <span className={`${styles.phaseStatus} ${
                     phase.status === 'completed' ? styles.statusCompleted :
                     phase.status === 'active' ? styles.statusActive :
