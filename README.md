@@ -24,13 +24,28 @@ Live demo: [https://votewise-eight.vercel.app](https://votewise-eight.vercel.app
 
 Elections are central to democracy, but the process can feel intimidating: registration, documentation, polling booths, EVM/VVPAT, Model Code of Conduct, timelines, and constitutional rules all sit in different places. VoteWise brings those pieces together in a warm, accessible, non-partisan experience.
 
-## Approach
+## Approach and Logic
 
 - **Accessible first:** clear reading flow, keyboard-friendly controls, skip links, visible focus states, high-contrast support, reduced-motion handling, and screen-reader semantics.
 - **Non-partisan AI:** Gemini is used as an educational assistant with guardrails for neutral, factual, election-process answers.
 - **Resilient demos:** every external dependency has fallback content so the app remains useful even when API keys are absent or quotas are exhausted.
 - **Secure API layer:** client requests go through server route handlers with validation, sanitization, rate limiting, caching, and security headers.
 - **Judging-ready evidence:** tests cover core utilities, API routes, Google integrations, analytics, fallback logic, validators, and data integrity.
+
+## How the Solution Works
+
+VoteWise relies on a secure, decoupled Next.js App Router architecture:
+1. **User Interaction**: Citizens interact with the React frontend (e.g., chatting with Election Buddy or searching for polling booths).
+2. **Secure Proxying**: The frontend sends validated payloads to our backend API routes (e.g., `/api/chat`, `/api/places`). 
+3. **Service Orchestration**: The server applies sliding-window rate limits, checks its LRU cache, and communicates securely with external services (Gemini 2.0 Flash, Google Maps, Firebase) using server-side API keys.
+4. **Graceful Degradation**: If an API key is missing or a quota is exceeded, the server intercepts the failure and returns a deterministic, hardcoded offline response (our "fallback" layer). This ensures the app always remains functional and interactive during hackathon demonstrations.
+
+## Assumptions Made
+
+During development, we made the following assumptions to guide our design:
+- **Judging Environment Constraints**: We assume the evaluation team might not configure all 14 external API keys required to run the full stack. We built the comprehensive fallback layer specifically to accommodate this constraint.
+- **Target Audience Accessibility**: We assume users range from first-time 18-year-old voters to elderly citizens with varying tech literacy. Consequently, we prioritized WCAG AA accessibility, large touch targets, and simplified language options over complex, flashy animations.
+- **Strict Political Neutrality**: We assume any civic tech tool will be highly scrutinized for bias. Therefore, we structured our AI prompts, datasets, and quiz questions to strictly focus on the *process* of elections (ECI, EVMs, timelines) rather than political parties, candidates, or ideologies.
 
 ## Features
 
