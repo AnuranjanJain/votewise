@@ -7,7 +7,7 @@
     <a href="#features"><img src="https://img.shields.io/badge/Gemini_2.0-Flash-blue?style=for-the-badge&logo=google" alt="Gemini AI"></a>
     <a href="#tech-stack"><img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js"></a>
     <a href="#architecture"><img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript" alt="TypeScript"></a>
-    <img src="https://img.shields.io/badge/Tests-280_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
+    <img src="https://img.shields.io/badge/Tests-332_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
     <img src="https://img.shields.io/badge/Google_Services-14_Integrated-orange?style=for-the-badge&logo=googlecloud" alt="Google Services">
   </p>
 </div>
@@ -181,7 +181,7 @@ npm run build
 ```
 
 ## 🧪 Running Tests
-VoteWise maintains a strictly tested foundation with **280 passing tests across 9 test suites**.
+VoteWise maintains a strictly tested foundation with **332 passing tests across 13 test suites**.
 ```bash
 # Run the test suite
 npm test
@@ -199,6 +199,11 @@ Test coverage includes:
 - ✅ Election Data (glossary, timeline, question bank)
 - ✅ Utility Helpers (formatting, democracy score, text truncation)
 - ✅ Constants (configuration integrity)
+- ✅ Gemini AI Client (chat, quiz generation, fallback responses)
+- ✅ Google Cloud Services (TTS, geocoding, places, haversine)
+- ✅ YouTube Client (video search, fallback content)
+- ✅ Analytics Module (event queuing, logging, retrieval)
+- ✅ API Route Handlers (all 7 routes, validation, rate limiting)
 
 <div align="center">
   <p>Built with ❤️ and ☕ for Prompt Wars</p>

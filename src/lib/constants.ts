@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — Centralized Configuration Constants
-// All magic numbers and config values in one place
-// ============================================================
+/**
+ * @module lib/constants
+ * @description Centralized configuration constants for VoteWise.
+ * All magic numbers, rate limits, TTL values, and validation
+ * thresholds are defined here for easy maintenance.
+ */
 
 /** Maximum length for chat messages (characters) */
 export const MAX_CHAT_MESSAGE_LENGTH = 2000;

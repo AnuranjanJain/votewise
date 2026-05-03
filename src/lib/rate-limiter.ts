@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — In-Memory Sliding Window Rate Limiter
-// Enforces per-IP request limits for API route protection
-// ============================================================
+/**
+ * @module lib/rate-limiter
+ * @description In-memory sliding-window rate limiter for API route protection.
+ * Enforces per-IP request limits across all VoteWise API endpoints
+ * to prevent abuse and ensure fair usage.
+ */
 
 /**
  * A record of request timestamps for a single client.

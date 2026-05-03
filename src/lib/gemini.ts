@@ -1,8 +1,9 @@
-// ============================================================
-// VoteWise — Gemini AI Client
-// Provides chat, quiz generation, text simplification,
-// translation, and fact-checking using Gemini 2.0 Flash
-// ============================================================
+/**
+ * @module lib/gemini
+ * @description Gemini AI client for VoteWise. Provides chat, quiz generation,
+ * text simplification, translation, and fact-checking using Gemini 2.0 Flash.
+ * All functions include deterministic fallback responses for offline/demo mode.
+ */
 
 import type { GenerativeModel } from '@google/generative-ai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -199,7 +200,13 @@ export async function factCheckClaim(claim: string): Promise<string> {
   }
 }
 
-/** Deterministic fallback responses for offline/demo mode */
+/**
+ * Returns a deterministic fallback chat response for offline/demo mode.
+ * Matches keywords in the user's message to return relevant election info.
+ *
+ * @param message - The user's message text
+ * @returns A pre-written educational response string
+ */
 function getFallbackResponse(message: string): string {
   const lower = message.toLowerCase();
 
@@ -222,6 +229,10 @@ function getFallbackResponse(message: string): string {
   return "👋 I'm **Election Buddy**, your AI-powered guide to understanding Indian elections!\n\nI can help you with:\n- 🗳️ How to vote and register\n- 📅 Election process and timeline\n- 📋 Your rights as a voter\n- 🏛️ How government is formed\n- 📊 Election facts and statistics\n\nWhat would you like to know?";
 }
 
+/**
+ * Returns a deterministic fallback quiz question for offline/demo mode.
+ * @returns JSON string containing a single quiz question
+ */
 function getFallbackQuizResponse(): string {
   return JSON.stringify([{
     question: `What is the primary body that conducts elections in India?`,
@@ -233,11 +244,24 @@ function getFallbackQuizResponse(): string {
   }]);
 }
 
+/**
+ * Returns a simplified version of text when the Gemini API is unavailable.
+ * @param text - The text to simplify
+ * @param level - The target reading level
+ * @returns A simplified version of the input
+ */
 function getFallbackSimplification(text: string, level: string): string {
   if (level === 'child') return `In simple words: ${text.substring(0, 100)}... This means the rules help make elections fair for everyone! 🗳️`;
   return `Simply put: ${text.substring(0, 200)}... This is an important part of how our democracy works.`;
 }
 
+/**
+ * Returns a fallback translation when the Gemini API is unavailable.
+ * Includes a small Hindi dictionary for common phrases.
+ * @param text - The text to translate
+ * @param lang - The target language name
+ * @returns The translated text or a placeholder
+ */
 function getFallbackTranslation(text: string, lang: string): string {
   const hindiMap: Record<string, string> = {
     'How to vote?': 'वोट कैसे करें?',
@@ -248,6 +272,11 @@ function getFallbackTranslation(text: string, lang: string): string {
   return `[${lang}] ${text} (Translation requires Gemini API key)`;
 }
 
+/**
+ * Returns a fallback fact-check result when the Gemini API is unavailable.
+ * @param claim - The claim to fact-check
+ * @returns A disclaimer message with the original claim
+ */
 function getFallbackFactCheck(claim: string): string {
   return `⚠️ **Fact Check Result:**\n\nI need to verify this claim against official ECI sources. For accurate fact-checking, please configure a Gemini API key.\n\n**Claim:** "${claim.substring(0, 100)}"\n\n**Tip:** Always refer to [eci.gov.in](https://eci.gov.in) for official information.`;
 }

@@ -1,7 +1,8 @@
-// ============================================================
-// VoteWise — YouTube Data API Client
-// Curates election education videos from YouTube
-// ============================================================
+/**
+ * @module lib/youtube
+ * @description YouTube Data API client for VoteWise. Curates election
+ * education videos with LRU caching and fallback curated content.
+ */
 
 import type { VideoResult } from '@/types';
 import { LRUCache } from './cache';
@@ -57,7 +58,11 @@ export async function searchElectionVideos(
   }
 }
 
-/** Fallback curated election education videos */
+/**
+ * Returns curated fallback election education videos for offline/demo mode.
+ * @param topic - The search topic to include in the fallback list
+ * @returns An array of static video results
+ */
 function getFallbackVideos(topic: string): VideoResult[] {
   return [
     { videoId: 'dQw4w9WgXcQ', title: 'How Indian Elections Work — Complete Guide', channelTitle: 'Civic Education India', description: 'A comprehensive guide to understanding the Indian election process from announcement to government formation.', thumbnailUrl: '', publishedAt: '2024-01-15T00:00:00Z', source: 'fallback' },

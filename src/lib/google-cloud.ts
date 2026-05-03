@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — Google Cloud Services Integration
-// TTS, Geocoding, Places, and Cloud Translation APIs
-// ============================================================
+/**
+ * @module lib/google-cloud
+ * @description Google Cloud service integrations for VoteWise.
+ * Provides Text-to-Speech, Geocoding, Places, and Translation APIs
+ * with LRU caching and deterministic fallbacks for offline mode.
+ */
 
 import { LRUCache } from './cache';
 import { CACHE_TTL } from './constants';
@@ -56,6 +58,11 @@ export async function synthesizeSpeech(options: TTSOptions): Promise<TTSResult> 
   }
 }
 
+/**
+ * Generates a fallback TTS result using Web Speech API metadata.
+ * @param text - The text to synthesize
+ * @returns A fallback TTS result with base64-encoded payload
+ */
 function generateFallbackTTS(text: string): TTSResult {
   const fallbackPayload = JSON.stringify({ fallback: true, text: text.substring(0, 200), engine: 'web-speech-api' });
   return { audioContent: Buffer.from(fallbackPayload).toString('base64'), source: 'fallback' };
@@ -102,6 +109,12 @@ export async function reverseGeocode(lat: number, lng: number): Promise<Geocodin
   }
 }
 
+/**
+ * Returns a fallback geocoding result centered on New Delhi.
+ * @param lat - The original latitude
+ * @param lng - The original longitude
+ * @returns A static geocoding result for demo purposes
+ */
 function getFallbackGeocode(lat: number, lng: number): GeocodingResult {
   return {
     formattedAddress: `Nirvachan Sadan, Ashoka Road, New Delhi, Delhi 110001 (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
@@ -155,6 +168,11 @@ export async function searchNearbyPlaces(lat: number, lng: number, type: string,
   }
 }
 
+/**
+ * Returns fallback nearby places for demo/offline mode.
+ * @param type - The requested place type
+ * @returns An array of static place results
+ */
 function getFallbackPlaces(type: string): NearbyPlace[] {
   const fallback: Record<string, NearbyPlace[]> = {
     local_government_office: [

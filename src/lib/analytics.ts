@@ -1,8 +1,8 @@
-// ============================================================
-// VoteWise — Firebase Analytics Helper
-// Tracks user interactions and page views via Firestore
-// with batched event queue for performance
-// ============================================================
+/**
+ * @module lib/analytics
+ * @description Firebase Analytics helper for VoteWise. Tracks user interactions
+ * and page views via Firestore with a batched event queue for performance.
+ */
 
 import { getFirestoreDb } from './firebase';
 import { collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs } from 'firebase/firestore';
@@ -36,6 +36,11 @@ let _sessionId: string | null = null;
 let _eventQueue: QueuedEvent[] = [];
 let _flushTimer: ReturnType<typeof setTimeout> | null = null;
 
+/**
+ * Retrieves or creates a persistent session ID for the current browser session.
+ * Stored in `sessionStorage` to persist across page navigations within a tab.
+ * @returns The current session identifier string
+ */
 function getSessionId(): string {
   if (_sessionId) return _sessionId;
   if (typeof window !== 'undefined') {

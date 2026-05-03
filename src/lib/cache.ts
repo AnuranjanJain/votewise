@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — Generic LRU Cache with TTL
-// High-performance in-memory cache for API responses
-// ============================================================
+/**
+ * @module lib/cache
+ * @description Generic LRU (Least Recently Used) cache with TTL support.
+ * High-performance in-memory cache used to deduplicate API responses
+ * across Gemini, Maps, YouTube, TTS, and Chat integrations.
+ */
 
 /**
  * Represents a single cached entry with value, timestamp, and TTL.

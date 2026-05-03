@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — Input Validators & Sanitizers
-// Validation and sanitization for API inputs and user data
-// ============================================================
+/**
+ * @module lib/validators
+ * @description Input validation and sanitization for VoteWise API routes.
+ * Includes prototype pollution prevention, XSS sanitization, and
+ * type-safe validation for all user-facing inputs.
+ */
 
 import {
   MAX_CHAT_MESSAGE_LENGTH,

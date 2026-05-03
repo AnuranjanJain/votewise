@@ -1,8 +1,9 @@
-// ============================================================
-// VoteWise — Shared API Route Utilities
-// Centralized response helpers, security headers, and validation
-// wrappers to eliminate duplication across API routes.
-// ============================================================
+/**
+ * @module lib/api-utils
+ * @description Shared API route utilities for VoteWise. Provides centralized
+ * response helpers, security headers, and validation wrappers to eliminate
+ * duplication across route handlers.
+ */
 
 import { NextResponse } from 'next/server';
 import { type ValidationResult } from './validators';

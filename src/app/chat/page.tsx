@@ -68,8 +68,12 @@ export default function ChatPage() {
 
   const renderContent = useCallback((content: string) => {
     return content.split('\n').map((line, i) => {
-      const boldLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      return <span key={i} dangerouslySetInnerHTML={{ __html: boldLine }} />;
+      // Safe bold rendering without dangerouslySetInnerHTML
+      const parts = line.split(/\*\*(.*?)\*\*/g);
+      const rendered = parts.map((part, j) =>
+        j % 2 === 1 ? <strong key={j}>{part}</strong> : <span key={j}>{part}</span>
+      );
+      return <span key={i}>{rendered}</span>;
     }).reduce((acc: React.ReactNode[], el, i) => {
       if (i > 0) acc.push(<br key={`br-${i}`} />);
       acc.push(el);

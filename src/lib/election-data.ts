@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — Election Process Knowledge Base
-// Comprehensive Indian election data: phases, glossary, facts
-// ============================================================
+/**
+ * @module lib/election-data
+ * @description Comprehensive Indian election knowledge base for VoteWise.
+ * Contains timeline phases, glossary terms, facts, quiz questions,
+ * polling station data, and the Gemini AI system prompt.
+ */
 
 import type { TimelinePhase, GlossaryTerm, ElectionFact, QuizQuestion, PollingStation } from '@/types';
 

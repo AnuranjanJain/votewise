@@ -1,7 +1,9 @@
-// ============================================================
-// VoteWise — Quiz Engine
-// Quiz logic, scoring, and progress tracking
-// ============================================================
+/**
+ * @module lib/quiz-engine
+ * @description Quiz engine for VoteWise. Manages quiz session lifecycle
+ * including question selection, answer processing, streak tracking,
+ * and score calculation with gamification mechanics.
+ */
 
 import type { QuizQuestion, QuizSession } from '@/types';
 import { QUIZ_CONFIG } from './constants';
