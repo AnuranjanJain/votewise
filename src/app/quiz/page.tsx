@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { QuizSession } from '@/types';
+import type { QuizSession } from '@/types';
 import { createQuizSession, processAnswer, calculateQuizStats, getCurrentQuestion, isQuizComplete } from '@/lib/quiz-engine';
 import styles from './page.module.css';
 

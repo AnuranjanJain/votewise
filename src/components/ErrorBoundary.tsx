@@ -1,6 +1,7 @@
 'use client';
 
-import { Component, ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
 
 interface ErrorBoundaryProps { children: ReactNode; fallback?: ReactNode; }
 interface ErrorBoundaryState { hasError: boolean; error: Error | null; }

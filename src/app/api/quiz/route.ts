@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { getRandomQuestions } from '@/lib/election-data';
 import { generateQuizQuestions } from '@/lib/gemini';
 import { successResponse, errorResponse, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';

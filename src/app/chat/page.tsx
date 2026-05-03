@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { ChatMessage } from '@/types';
+import type { ChatMessage } from '@/types';
 import { generateId } from '@/utils/helpers';
 import styles from './page.module.css';
 

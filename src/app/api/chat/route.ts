@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { chatWithGemini } from '@/lib/gemini';
 import { validateChatMessage, sanitizeInput } from '@/lib/validators';
 import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';

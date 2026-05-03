@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { validateAnalyticsEvent, validateAnalyticsBatch } from '@/lib/validators';
 import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { analyticsLimiter, getClientId } from '@/lib/rate-limiter';

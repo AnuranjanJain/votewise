@@ -4,7 +4,8 @@
 // translation, and fact-checking using Gemini 2.0 Flash
 // ============================================================
 
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import type { GenerativeModel } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ELECTION_SYSTEM_PROMPT } from './election-data';
 import { GEMINI_CONFIG, CACHE_TTL } from './constants';
 import { LRUCache } from './cache';

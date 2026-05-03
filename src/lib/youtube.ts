@@ -3,7 +3,7 @@
 // Curates election education videos from YouTube
 // ============================================================
 
-import { VideoResult } from '@/types';
+import type { VideoResult } from '@/types';
 import { LRUCache } from './cache';
 import { CACHE_TTL } from './constants';
 

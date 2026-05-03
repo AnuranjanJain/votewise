@@ -1,11 +1,15 @@
-// ============================================================
-// VoteWise — Firebase Client Setup
-// Firestore, Auth, and real-time data persistence
-// ============================================================
+/**
+ * @module lib/firebase
+ * @description Firebase client setup providing Firestore database, Auth,
+ * and real-time data persistence for quiz results and learning progress.
+ */
 
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getFirestore, Firestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from 'firebase/firestore';
-import { getAuth, signInAnonymously, Auth } from 'firebase/auth';
+import type { FirebaseApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
+import type { Firestore} from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from 'firebase/firestore';
+import type { Auth } from 'firebase/auth';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'demo-key',
@@ -20,7 +24,7 @@ let app: FirebaseApp;
 let db: Firestore;
 let auth: Auth;
 
-/** Returns the Firebase App singleton */
+/** Returns the Firebase App singleton, initializing if necessary */
 function getFirebaseApp(): FirebaseApp {
   if (!app) {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
@@ -28,7 +32,7 @@ function getFirebaseApp(): FirebaseApp {
   return app;
 }
 
-/** Returns the Firestore instance */
+/** Returns the Firestore database instance */
 export function getFirestoreDb(): Firestore {
   if (!db) db = getFirestore(getFirebaseApp());
   return db;
@@ -40,7 +44,12 @@ export function getFirebaseAuth(): Auth {
   return auth;
 }
 
-/** Signs in anonymously */
+/**
+ * Signs in anonymously to Firebase Auth.
+ * Falls back to a random session ID on failure.
+ *
+ * @returns The user's unique ID string
+ */
 export async function signInAnon(): Promise<string> {
   const authInstance = getFirebaseAuth();
   try {
@@ -52,7 +61,12 @@ export async function signInAnon(): Promise<string> {
   }
 }
 
-/** Saves a quiz result to Firestore */
+/**
+ * Saves a completed quiz result to the 'quiz_results' Firestore collection.
+ * Calculates and stores the percentage score alongside raw data.
+ *
+ * @param data - The quiz result data including score, total, difficulty, and time
+ */
 export async function saveQuizResult(data: {
   score: number;
   totalQuestions: number;
@@ -74,7 +88,12 @@ export async function saveQuizResult(data: {
   }
 }
 
-/** Retrieves quiz leaderboard */
+/**
+ * Retrieves the quiz leaderboard sorted by percentage score (descending).
+ *
+ * @param maxEntries - Maximum entries to return (defaults to 20)
+ * @returns Array of leaderboard entries
+ */
 export async function getLeaderboard(maxEntries: number = 20): Promise<Record<string, unknown>[]> {
   try {
     const firestore = getFirestoreDb();
@@ -88,7 +107,11 @@ export async function getLeaderboard(maxEntries: number = 20): Promise<Record<st
   }
 }
 
-/** Saves learning progress */
+/**
+ * Persists a learning progress snapshot to the 'learning_progress' collection.
+ *
+ * @param data - Arbitrary progress data to save
+ */
 export async function saveLearningProgress(data: Record<string, unknown>): Promise<void> {
   try {
     const firestore = getFirestoreDb();

@@ -3,7 +3,7 @@
 // Quiz logic, scoring, and progress tracking
 // ============================================================
 
-import { QuizQuestion, QuizSession } from '@/types';
+import type { QuizQuestion, QuizSession } from '@/types';
 import { QUIZ_CONFIG } from './constants';
 import { getRandomQuestions, quizQuestionBank } from './election-data';
 

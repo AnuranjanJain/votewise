@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { synthesizeSpeech } from '@/lib/google-cloud';
 import { successResponse, errorResponse, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { ttsLimiter, getClientId } from '@/lib/rate-limiter';

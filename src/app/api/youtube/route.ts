@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { searchElectionVideos } from '@/lib/youtube';
 import { successResponse, errorResponse, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { youtubeLimiter, getClientId } from '@/lib/rate-limiter';

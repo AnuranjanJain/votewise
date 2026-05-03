@@ -1,9 +1,20 @@
-// ============================================================
-// VoteWise — Utility Helpers
-// ============================================================
+/**
+ * @module utils/helpers
+ * @description Utility helper functions for formatting, scoring, and common operations.
+ */
 
 /**
- * Formats a number with commas (Indian numbering system).
+ * Formats a number with commas using the Indian numbering system.
+ * In India, digits are grouped as: last 3 digits, then every 2 digits.
+ *
+ * @param num - The number to format
+ * @returns The formatted number string (e.g., 1,00,000)
+ *
+ * @example
+ * ```ts
+ * formatIndianNumber(100000); // '1,00,000'
+ * formatIndianNumber(12345);  // '12,345'
+ * ```
  */
 export function formatIndianNumber(num: number): string {
   const str = num.toString();
@@ -16,7 +27,16 @@ export function formatIndianNumber(num: number): string {
 }
 
 /**
- * Formats seconds into a human-readable duration.
+ * Formats a duration in seconds into a human-readable string.
+ *
+ * @param seconds - The duration in seconds
+ * @returns Formatted string (e.g., "5m 30s", "2h 15m")
+ *
+ * @example
+ * ```ts
+ * formatDuration(90);   // '1m 30s'
+ * formatDuration(3600); // '1h 0m'
+ * ```
  */
 export function formatDuration(seconds: number): string {
   if (seconds < 60) return `${seconds}s`;
@@ -29,7 +49,10 @@ export function formatDuration(seconds: number): string {
 }
 
 /**
- * Formats a date string into a human-readable format.
+ * Formats a date string into Indian locale format.
+ *
+ * @param dateString - An ISO 8601 date string
+ * @returns Formatted date (e.g., "3 May 2026")
  */
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -39,7 +62,11 @@ export function formatDate(dateString: string): string {
 }
 
 /**
- * Calculates a "democracy score" based on learning progress.
+ * Calculates a democracy score (0–100) based on user learning activity.
+ * Weighted formula: topics (30%), quizzes (25%), chat (20%), phases (25%).
+ *
+ * @param progress - Object containing user engagement metrics
+ * @returns Integer score from 0 to 100
  */
 export function calculateDemocracyScore(progress: {
   topicsCompleted: number;
@@ -55,14 +82,21 @@ export function calculateDemocracyScore(progress: {
 }
 
 /**
- * Generates a unique ID.
+ * Generates a unique ID using timestamp + random suffix.
+ * Not cryptographically secure — suitable for client-side identifiers.
+ *
+ * @returns A unique string identifier (e.g., "lnq1a2bcd3e")
  */
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
 }
 
 /**
- * Truncates text to a max length with ellipsis.
+ * Truncates text to a maximum length, appending ellipsis if needed.
+ *
+ * @param text - The input string to truncate
+ * @param maxLength - Maximum output length (including ellipsis)
+ * @returns The truncated string, or the original if within bounds
  */
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
@@ -70,7 +104,12 @@ export function truncateText(text: string, maxLength: number): string {
 }
 
 /**
- * Debounce function.
+ * Creates a debounced version of a function that delays invocation
+ * until `wait` milliseconds have elapsed since the last call.
+ *
+ * @param func - The function to debounce
+ * @param wait - The debounce delay in milliseconds
+ * @returns A debounced version of `func`
  */
 export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
@@ -84,7 +123,9 @@ export function debounce<T extends (...args: unknown[]) => void>(
 }
 
 /**
- * Returns a greeting based on time of day.
+ * Returns a contextual greeting based on the current time of day.
+ *
+ * @returns "Good Morning" (before noon), "Good Afternoon" (noon–5pm), or "Good Evening"
  */
 export function getTimeGreeting(): string {
   const hour = new Date().getHours();

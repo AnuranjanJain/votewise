@@ -3,7 +3,7 @@
 // Comprehensive Indian election data: phases, glossary, facts
 // ============================================================
 
-import { TimelinePhase, GlossaryTerm, ElectionFact, QuizQuestion, PollingStation } from '@/types';
+import type { TimelinePhase, GlossaryTerm, ElectionFact, QuizQuestion, PollingStation } from '@/types';
 
 /** System prompt for Gemini AI — Election Buddy */
 export const ELECTION_SYSTEM_PROMPT = `You are "Election Buddy", an AI assistant created by VoteWise to help citizens understand the Indian election process. You are knowledgeable, friendly, non-partisan, and educational.

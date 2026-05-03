@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { searchNearbyPlaces } from '@/lib/google-cloud';
 import { validateCoordinates } from '@/lib/validators';
 import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';

@@ -143,8 +143,9 @@ describe('Election Data', () => {
       // Probabilistically they should be different
       const ids1 = q1.map(q => q.id).join(',');
       const ids2 = q2.map(q => q.id).join(',');
-      // Note: very small chance of false failure but practically always passes
-      expect(q1.length).toBeGreaterThan(0);
+      // At least verify both calls returned results (shuffle order is probabilistic)
+      expect(ids1.length).toBeGreaterThan(0);
+      expect(ids2.length).toBeGreaterThan(0);
     });
   });
 });

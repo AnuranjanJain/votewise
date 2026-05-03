@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, createContext, useContext, ReactNode, useCallback } from 'react';
-import { AccessibilitySettings, LearningProgress, Theme } from '@/types';
+import type { ReactNode} from 'react';
+import { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import type { AccessibilitySettings, LearningProgress, Theme } from '@/types';
 
 interface AppContextType {
   theme: Theme;
