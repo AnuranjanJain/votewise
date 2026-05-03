@@ -48,7 +48,6 @@ VoteWise uses a modern **Next.js App Router** architecture combined with Google 
 graph TD
     User([User / Citizen])
     
-    subalign
     subgraph Frontend [Next.js App Router]
         UI[Cozy UI System]
         A11y[Accessibility Context]
@@ -57,9 +56,9 @@ graph TD
     end
     
     subgraph Backend [Secure Route Handlers]
-        API_Chat[/api/chat]
-        API_Geo[/api/geocode & places]
-        API_TTS[/api/tts]
+        API_Chat["/api/chat"]
+        API_Geo["/api/geocode & places"]
+        API_TTS["/api/tts"]
     end
     
     subgraph Google_Services [Google Cloud Ecosystem]
