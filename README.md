@@ -1,210 +1,212 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Ballot%20box%20with%20ballot/3D/ballot_box_with_ballot_3d.png" alt="VoteWise Logo" width="120" />
-  <h1>🗳️ VoteWise</h1>
-  <p><strong>Your Cozy & Friendly Guide to the Indian Election Process</strong></p>
-  
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Ballot%20box%20with%20ballot/3D/ballot_box_with_ballot_3d.png" alt="VoteWise logo" width="120" />
+  <h1>VoteWise</h1>
+  <p><strong>A friendly, non-partisan guide to the Indian election process</strong></p>
+
   <p>
     <a href="#features"><img src="https://img.shields.io/badge/Gemini_2.0-Flash-blue?style=for-the-badge&logo=google" alt="Gemini AI"></a>
     <a href="#tech-stack"><img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js"></a>
-    <a href="#architecture"><img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript" alt="TypeScript"></a>
-    <img src="https://img.shields.io/badge/Tests-332_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
-    <img src="https://img.shields.io/badge/Google_Services-14_Integrated-orange?style=for-the-badge&logo=googlecloud" alt="Google Services">
+    <a href="#quality"><img src="https://img.shields.io/badge/Tests-342_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests"></a>
+    <a href="#security"><img src="https://img.shields.io/badge/Security-Hardened-success?style=for-the-badge" alt="Security hardened"></a>
+    <a href="#google-services"><img src="https://img.shields.io/badge/Google_Services-14_Integrated-orange?style=for-the-badge&logo=googlecloud" alt="Google Services"></a>
   </p>
 </div>
 
 ---
 
-**VoteWise** is an interactive, beautifully designed election education platform built for the **Prompt Wars Round 2 Hackathon**. It leverages 14 different Google Services to create a premium, accessible, and highly intuitive platform designed to demystify the Indian election process for all citizens.
+VoteWise is an interactive civic education platform built for the Prompt Wars Round 2 Hackathon. It helps citizens understand voter registration, EVMs, election timelines, voter rights, polling locations, and core democratic institutions through a polished Next.js experience backed by Google services and deterministic fallbacks.
 
-### 🌐 Live Production Demo
-**Try it live: [https://votewise-eight.vercel.app](https://votewise-eight.vercel.app)**
+Live demo: [https://votewise-eight.vercel.app](https://votewise-eight.vercel.app)
 
----
+## Chosen Vertical
 
-## 🎯 Chosen Vertical: Civic Engagement & Education
+**Civic Engagement and Education**
 
-Elections are the backbone of democracy, yet the process—from registering to voting, understanding rights, and tracking the timeline—can feel overwhelming to the average citizen. 
+Elections are central to democracy, but the process can feel intimidating: registration, documentation, polling booths, EVM/VVPAT, Model Code of Conduct, timelines, and constitutional rules all sit in different places. VoteWise brings those pieces together in a warm, accessible, non-partisan experience.
 
-We chose this vertical because **informed citizens make better democracies**. Instead of creating a dry, text-heavy government portal, VoteWise acts as a **cozy, friendly, and non-partisan companion**. By gamifying learning and using AI to simplify complex constitutional rules, we aim to boost voter confidence and participation.
+## Approach
 
----
+- **Accessible first:** clear reading flow, keyboard-friendly controls, skip links, visible focus states, high-contrast support, reduced-motion handling, and screen-reader semantics.
+- **Non-partisan AI:** Gemini is used as an educational assistant with guardrails for neutral, factual, election-process answers.
+- **Resilient demos:** every external dependency has fallback content so the app remains useful even when API keys are absent or quotas are exhausted.
+- **Secure API layer:** client requests go through server route handlers with validation, sanitization, rate limiting, caching, and security headers.
+- **Judging-ready evidence:** tests cover core utilities, API routes, Google integrations, analytics, fallback logic, validators, and data integrity.
 
-## 🧠 Approach and Logic
+## Features
 
-Our approach centered around three core pillars:
+- **Election Buddy AI:** asks and answers questions about Indian elections using Gemini 2.0 Flash with deterministic fallback responses.
+- **Interactive Timeline:** explains election phases from announcement to government formation.
+- **Gamified Quiz:** includes difficulty levels, categories, streak bonuses, explanations, and progress scoring.
+- **Polling Locator:** uses Maps, Geocoding, and Places APIs to surface likely civic locations near the user.
+- **Learning Hub:** includes glossary content, curated videos, fact-check support, and voter education resources.
+- **Accessibility Controls:** supports high contrast, larger text, reduced motion, semantic navigation, and robust focus states.
 
-1. **Accessibility & Coziness Over "Tech"**: We intentionally moved away from harsh "cyber" aesthetics in favor of a soft, beautiful, pastel-driven UI. The goal is to make the platform feel approachable, safe, and easy to read. Scroll animations, smooth transitions, and high-contrast modes ensure everyone can engage comfortably.
-2. **AI as a Non-Partisan Buddy**: We utilized **Gemini 2.0 Flash** strictly as an educational tool. Through robust system prompting, the "Election Buddy" AI is hardcoded to remain neutral, cite the Election Commission of India (ECI), and avoid political bias.
-3. **Resilience & Determinism**: Hackathon demos often fail due to API rate limits. Our logic implements a "deterministic fallback" system. If any Google API fails, the application seamlessly degrades to a rich, offline dataset, ensuring 100% uptime for judges.
+## Architecture
 
----
-
-## ⚙️ How the Solution Works
-
-VoteWise uses a modern **Next.js App Router** architecture combined with Google Cloud infrastructure.
-
-### Architectural Flow
 ```mermaid
 graph TD
-    User([User / Citizen])
-    
-    subgraph Frontend [Next.js App Router]
-        UI[Cozy UI System]
-        A11y[Accessibility Context]
-        Quiz[Gamified Quiz Engine]
-        MapUI[Interactive Map View]
-    end
-    
-    subgraph Backend [Secure Route Handlers]
-        API_Chat["/api/chat"]
-        API_Geo["/api/geocode & places"]
-        API_TTS["/api/tts"]
-    end
-    
-    subgraph Google_Services [Google Cloud Ecosystem]
-        Gemini[Gemini 2.0 Flash]
-        Maps[Google Maps Platform]
-        Cloud[Cloud TTS & Translate]
-        Youtube[YouTube Data API]
-        Firebase[(Firebase Firestore)]
-    end
-    
-    User <-->|Scrolls & Clicks| Frontend
-    Frontend <-->|Secure Proxy Fetch| Backend
-    Backend <-->|API Keys| Google_Services
-    
-    %% Styling
-    classDef primary fill:#2563eb,stroke:#fff,stroke-width:2px,color:#fff;
-    classDef secondary fill:#64748b,stroke:#fff,stroke-width:2px,color:#fff;
-    classDef google fill:#ffffff,stroke:#ea4335,stroke-width:2px,color:#000;
-    
-    class Frontend,Backend primary;
-    class User secondary;
-    class Google_Services google;
+    User([Citizen])
+    UI[Next.js App Router UI]
+    API[Secure API Route Handlers]
+    Data[Offline Election Dataset]
+    Gemini[Gemini 2.0 Flash]
+    Maps[Google Maps Platform]
+    Cloud[Google Cloud TTS and Translation]
+    YouTube[YouTube Data API]
+    Firebase[Firebase Auth and Firestore]
+
+    User --> UI
+    UI --> API
+    UI --> Data
+    API --> Gemini
+    API --> Maps
+    API --> Cloud
+    API --> YouTube
+    UI --> Firebase
 ```
 
-### Feature Mechanics:
-*   **Election Buddy AI**: The user types a question in the chat interface. The Next.js frontend sends this to our secure `/api/chat` route handler, which injects a strict non-partisan system prompt and forwards it to the **Gemini 2.0 Flash** model. 
-*   **Gamified Quiz**: Users test their knowledge. The frontend pulls dynamic questions generated by Gemini and tracks the user's Democracy Score in **Firebase Firestore**.
-*   **Polling Locator**: The user allows location access. The `/api/places` handler securely calls the **Google Places API** to identify nearby government buildings or schools likely used as polling booths, rendering them on a **Google Maps JS** instance.
-*   **Accessibility**: Users can click a button to have the text read aloud. The frontend sends the text to `/api/tts`, which uses **Cloud Text-to-Speech** to return an audio stream.
+## Google Services
 
----
+VoteWise integrates or supports the following Google ecosystem services:
 
-## 💡 Assumptions Made
+- Gemini 2.0 Flash
+- Google Maps JavaScript API
+- Google Geocoding API
+- Google Places API
+- Google Cloud Text-to-Speech
+- Google Cloud Translation
+- YouTube Data API
+- Firebase Auth
+- Firebase Firestore
+- Firebase Hosting-ready configuration
+- Google Cloud API key proxying through route handlers
+- Google Fonts
+- Google Maps fallback-aware UI state
+- Google service caching and quota resilience
 
-During the development of VoteWise, we made the following operational assumptions:
-1. **ECI Data Stability**: We assume the general rules of the Indian Election (e.g., voting age, EVM usage, Model Code of Conduct) remain stable for the 2024 cycle.
-2. **Non-Partisan Requirement**: We assumed that an educational tool must absolutely not show political bias. Thus, the AI is heavily restricted from discussing specific political parties or current candidates.
-3. **Browser Capabilities**: We assume modern browser support for CSS variables, smooth scrolling, and Intersection Observers for our animations.
-4. **API Limitations**: We assumed free-tier limits on Google APIs might be hit during testing, which drove the decision to build robust mock-data fallbacks for Map, TTS, and Quiz generation.
+## Security
 
----
+- Strict input validation for chat, quiz, analytics, TTS, Places, YouTube, image, URL, and coordinate payloads.
+- Sanitized user-generated text before model calls and UI rendering.
+- No `dangerouslySetInnerHTML` in the chat rendering path.
+- Sliding-window rate limiting on all public API routes.
+- Security headers for MIME sniffing, clickjacking, HSTS, permissions policy, referrer policy, and cross-origin protections.
+- Prototype pollution guards for object validators.
+- Server-side API proxying keeps sensitive service keys away from browser request payloads.
 
-## 🚀 Performance Optimization
+## Accessibility
 
-VoteWise implements multiple layers of performance optimization:
+- WCAG-aligned focus visibility and skip-to-content navigation.
+- Reduced-motion handling through CSS media queries and app settings.
+- Progress bars expose `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`.
+- Decorative icons are hidden from assistive technology.
+- Dynamic feedback uses status/alert semantics where appropriate.
+- Mobile navigation uses `aria-current` for active route state.
 
-- **LRU Caching**: All API responses (Gemini, Geocoding, Places, TTS, YouTube) are cached using an in-memory LRU cache with configurable TTL to minimize redundant API calls.
-- **Analytics Event Batching**: Client-side analytics events are queued and flushed in batches (every 10s or 20 events) instead of one-at-a-time writes, reducing Firestore write operations by up to 95%.
-- **Memoization & useCallback**: React components use `useMemo` and `useCallback` to prevent unnecessary re-renders and re-computations.
-- **Build Optimization**: Next.js is configured with `reactStrictMode`, compression, and static asset caching headers for production performance.
+## Quality
 
-## 🔒 Security Architecture
+Current validation baseline:
 
-- **Content Security Policy (CSP)**: Strict CSP headers restrict script sources, frame ancestors, and object embedding.
-- **Rate Limiting**: All 7 API routes are protected by sliding-window rate limiters with per-endpoint configuration.
-- **Input Sanitization**: All user inputs are validated AND sanitized before processing. Prototype pollution prevention is built into object validators.
-- **Security Headers**: Every API response includes X-Content-Type-Options, X-Frame-Options, HSTS, Permissions-Policy, and Referrer-Policy headers.
+- **342 tests passing across 14 suites**
+- **80.45% statement coverage**
+- **83.53% line coverage**
+- **0 ESLint warnings under strict lint**
+- **Clean production build**
 
-## ♿ Accessibility Compliance
+Coverage includes:
 
-- **WCAG 2.1 AA**: Skip-to-content link, focus-visible outlines, prefers-reduced-motion support, high-contrast mode.
-- **ARIA Patterns**: Proper `role="tablist"` with roving tabindex, `role="radiogroup"` for quiz options, `aria-live` regions for dynamic content.
-- **Keyboard Navigation**: Full arrow-key navigation for tabs and quiz options, proper focus management after interactions.
-- **Screen Reader Support**: `aria-label`, `aria-describedby`, `aria-busy`, `role="status"`, and `sr-only` elements throughout.
+- API route handlers and validation paths
+- Gemini chat, quiz generation, simplification, translation, fact-checking, and fallbacks
+- Google Cloud TTS, geocoding, places, translation, and distance calculations
+- YouTube search and fallback video content
+- Firebase-backed analytics helpers
+- Firebase Auth, Firestore persistence, leaderboard retrieval, and failure recovery
+- LRU cache, rate limiter, validators, constants, election data, quiz engine, and utility helpers
 
----
+## Tech Stack
 
-## 💻 Tech Stack
+- **Frontend:** Next.js 16, React 19, TypeScript, CSS Modules
+- **Backend:** Next.js App Router route handlers
+- **AI:** Gemini 2.0 Flash
+- **Maps and location:** Google Maps JavaScript API, Geocoding API, Places API
+- **Media and language:** YouTube Data API, Cloud Text-to-Speech, Cloud Translation
+- **Persistence:** Firebase Auth and Firestore
+- **Testing:** Jest, ts-jest, Testing Library, jsdom
+- **Quality:** ESLint 9, TypeScript strict mode, Prettier config, EditorConfig
 
-### Frontend
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+## Getting Started
 
-### Backend & Cloud
-![Gemini](https://img.shields.io/badge/Gemini_2.0-Flash-blue?style=for-the-badge&logo=google)
-![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
-![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
+1. Install dependencies:
 
----
-
-## 🏁 Getting Started
-
-1. Clone the repository and install dependencies:
    ```bash
-   git clone <repo-url>
-   cd votewise
    npm install
    ```
 
-2. Set up your environment variables by copying the template:
+2. Create the local environment file:
+
    ```bash
    cp .env.example .env.local
    ```
-   *(Add your Gemini, Maps, Cloud, and Firebase keys to `.env.local`)*
 
-### 🔐 Environment Variables
+3. Add your service keys to `.env.local`.
 
-Core keys (see `.env.example` for the full list):
-- `GEMINI_API_KEY` (or `NEXT_PUBLIC_GEMINI_API_KEY` for client-side fallback)
-- `GOOGLE_MAPS_API_KEY`
-- `GOOGLE_CLOUD_API_KEY` (Cloud Translation / Text-to-Speech if enabled in your project)
-- Firebase config values (project-specific)
+4. Run the development server:
 
-3. Start the development server:
    ```bash
    npm run dev
    ```
 
-### ✅ Quality Gates
+5. Open [http://localhost:3000](http://localhost:3000).
 
-Run the same checks used in CI-style review:
+## Environment Variables
+
+See `.env.example` for the full template. Important keys include:
+
+- `GEMINI_API_KEY`
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
+- `GOOGLE_CLOUD_TTS_API_KEY`
+- `GOOGLE_CLOUD_TRANSLATION_API_KEY`
+- `YOUTUBE_DATA_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
+
+## Scripts
+
 ```bash
-npm run validate
+npm run dev            # Start local development
+npm run build          # Build production app
+npm run start          # Serve production build
+npm run lint           # Lint the full repository
+npm run lint:strict    # Lint src with zero warnings
+npm run type-check     # Run TypeScript checks
+npm test               # Run Jest tests
+npm run test:coverage  # Run Jest with coverage
+npm run validate       # Type-check, lint, and test
 ```
 
-Production build check:
-```bash
-npm run build
+## Project Structure
+
+```text
+src/
+  app/              Next.js pages and API route handlers
+  components/       Shared UI and layout components
+  lib/              Integrations, validation, caching, analytics, data, quiz logic
+  types/            Shared TypeScript contracts
+  utils/            Reusable helper functions
+  __tests__/        Unit and integration-style test suites
 ```
 
-## 🧪 Running Tests
-VoteWise maintains a strictly tested foundation with **332 passing tests across 13 test suites**.
-```bash
-# Run the test suite
-npm test
+## Governance
 
-# Run with coverage report
-npm test -- --coverage
-```
+- MIT licensed.
+- Contribution workflow is documented in `CONTRIBUTING.md`.
+- Formatting expectations are captured in `.editorconfig` and `.prettierrc`.
+- Security-sensitive work should prefer route handlers, shared validators, and deterministic fallbacks.
 
-Test coverage includes:
-- ✅ LRU Cache (basic ops, eviction, TTL, purge)
-- ✅ Rate Limiter (sliding window, client tracking, expiry)
-- ✅ API Utilities (security headers, response helpers)
-- ✅ Validators (input validation, sanitization, prototype pollution, URL safety)
-- ✅ Quiz Engine (scoring, streaks, difficulty filtering)
-- ✅ Election Data (glossary, timeline, question bank)
-- ✅ Utility Helpers (formatting, democracy score, text truncation)
-- ✅ Constants (configuration integrity)
-- ✅ Gemini AI Client (chat, quiz generation, fallback responses)
-- ✅ Google Cloud Services (TTS, geocoding, places, haversine)
-- ✅ YouTube Client (video search, fallback content)
-- ✅ Analytics Module (event queuing, logging, retrieval)
-- ✅ API Route Handlers (all 7 routes, validation, rate limiting)
+---
 
-<div align="center">
-  <p>Built with ❤️ and ☕ for Prompt Wars</p>
-</div>
+Built for Prompt Wars with a focus on civic clarity, accessible UX, and reliable demos.
