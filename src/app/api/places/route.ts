@@ -1,29 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { searchNearbyPlaces } from '@/lib/google-cloud';
 import { validateCoordinates } from '@/lib/validators';
-
-const SECURITY_HEADERS = { 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' };
+import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
+import { placesLimiter, getClientId } from '@/lib/rate-limiter';
 
 export async function POST(request: NextRequest) {
+  const clientId = getClientId(request);
+  if (!placesLimiter.check(clientId)) {
+    return errorResponse('Too many requests. Please wait a moment.', 429);
+  }
+
+  const body = await safeParseBody<{ lat?: number; lng?: number; type?: string; radius?: number }>(request);
+  if (!body) return errorResponse('Invalid request body', 400);
+
   try {
-    const body = await request.json();
     const { lat, lng, type, radius } = body;
     const validation = validateCoordinates(lat, lng);
-    if (!validation.valid) {
-      return NextResponse.json({ error: validation.error }, { status: 400, headers: SECURITY_HEADERS });
-    }
+    if (!validation.valid) return validationError(validation);
     if (!type || typeof type !== 'string') {
-      return NextResponse.json({ error: 'Place type is required' }, { status: 400, headers: SECURITY_HEADERS });
+      return errorResponse('Place type is required', 400);
     }
     const clampedRadius = Math.max(100, Math.min(5000, radius || 2000));
-    const results = await searchNearbyPlaces(lat, lng, type, clampedRadius);
-    return NextResponse.json({ places: results, count: results.length }, { headers: SECURITY_HEADERS });
+    const results = await searchNearbyPlaces(lat as number, lng as number, type, clampedRadius);
+    return successResponse({ places: results, count: results.length });
   } catch (error) {
     console.error('[VoteWise API] Places error:', error);
-    return NextResponse.json({ error: 'Places search failed' }, { status: 500, headers: SECURITY_HEADERS });
+    return errorResponse('Places search failed');
   }
 }
 
 export async function GET() {
-  return NextResponse.json({ status: 'ok', service: 'VoteWise Places' }, { headers: SECURITY_HEADERS });
+  return serviceInfoResponse('VoteWise Places');
 }

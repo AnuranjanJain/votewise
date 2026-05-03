@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChatMessage } from '@/types';
 import { generateId } from '@/utils/helpers';
 import styles from './page.module.css';
@@ -26,12 +26,13 @@ export default function ChatPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
     const userMsg: ChatMessage = { id: generateId(), role: 'user', content: text.trim(), timestamp: new Date().toISOString() };
     setMessages(prev => [...prev, userMsg]);
@@ -58,12 +59,14 @@ export default function ChatPage() {
       setMessages(prev => [...prev, errorMsg]);
     } finally {
       setIsLoading(false);
+      // Restore focus to input after response
+      inputRef.current?.focus();
     }
-  };
+  }, [isLoading, messages]);
 
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); sendMessage(input); };
+  const handleSubmit = useCallback((e: React.FormEvent) => { e.preventDefault(); sendMessage(input); }, [input, sendMessage]);
 
-  const renderContent = (content: string) => {
+  const renderContent = useCallback((content: string) => {
     return content.split('\n').map((line, i) => {
       const boldLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       return <span key={i} dangerouslySetInnerHTML={{ __html: boldLine }} />;
@@ -72,60 +75,80 @@ export default function ChatPage() {
       acc.push(el);
       return acc;
     }, []);
-  };
+  }, []);
+
+  const messageCount = useMemo(() => messages.length, [messages]);
 
   return (
     <div className="page-content">
-      <div className={styles.chatContainer}>
+      <div className={styles.chatContainer} role="region" aria-label="Election Buddy Chat">
         <div className={styles.chatHeader}>
-          <div className={styles.chatTitle}>🤖 Election Buddy</div>
-          <div className={styles.chatSubtitle}>AI-powered by Gemini • Non-partisan • Educational</div>
+          <div className={styles.chatTitle} id="chat-title">🤖 Election Buddy</div>
+          <div className={styles.chatSubtitle} id="chat-subtitle">AI-powered by Gemini • Non-partisan • Educational</div>
         </div>
 
-        <div className={styles.messages} role="log" aria-live="polite" aria-label="Chat messages">
+        <div
+          className={styles.messages}
+          role="log"
+          aria-live="polite"
+          aria-label={`Chat messages — ${messageCount} messages`}
+          aria-describedby="chat-subtitle"
+          aria-busy={isLoading}
+        >
           {messages.map(msg => (
             <div key={msg.id} className={`${styles.message} ${msg.role === 'user' ? styles.messageUser : styles.messageAssistant}`}>
-              <div className={`${styles.messageAvatar} ${msg.role === 'user' ? styles.messageAvatarUser : styles.messageAvatarBot}`}>
+              <div
+                className={`${styles.messageAvatar} ${msg.role === 'user' ? styles.messageAvatarUser : styles.messageAvatarBot}`}
+                aria-hidden="true"
+              >
                 {msg.role === 'user' ? '👤' : '🤖'}
               </div>
-              <div className={`${styles.messageBubble} ${msg.role === 'user' ? styles.messageBubbleUser : styles.messageBubbleBot}`}>
+              <div
+                className={`${styles.messageBubble} ${msg.role === 'user' ? styles.messageBubbleUser : styles.messageBubbleBot}`}
+                role={msg.role === 'assistant' ? 'status' : undefined}
+              >
                 {renderContent(msg.content)}
               </div>
             </div>
           ))}
           {isLoading && (
             <div className={`${styles.message} ${styles.messageAssistant}`}>
-              <div className={`${styles.messageAvatar} ${styles.messageAvatarBot}`}>🤖</div>
-              <div className={`${styles.messageBubble} ${styles.messageBubbleBot}`}>
-                <div className={styles.typingIndicator}>
+              <div className={`${styles.messageAvatar} ${styles.messageAvatarBot}`} aria-hidden="true">🤖</div>
+              <div className={`${styles.messageBubble} ${styles.messageBubbleBot}`} role="status" aria-label="Election Buddy is typing">
+                <div className={styles.typingIndicator} aria-hidden="true">
                   <div className={styles.typingDot} /><div className={styles.typingDot} /><div className={styles.typingDot} />
                 </div>
+                <span className="sr-only">Election Buddy is typing a response...</span>
               </div>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        <div className={styles.quickActions}>
+        <div className={styles.quickActions} role="group" aria-label="Quick action suggestions">
           {quickActions.map(action => (
-            <button key={action} className={styles.quickAction} onClick={() => sendMessage(action)} disabled={isLoading}>
+            <button key={action} className={styles.quickAction} onClick={() => sendMessage(action)} disabled={isLoading} aria-label={`Ask: ${action}`}>
               {action}
             </button>
           ))}
         </div>
 
-        <form className={styles.inputArea} onSubmit={handleSubmit}>
+        <form className={styles.inputArea} onSubmit={handleSubmit} role="search" aria-label="Send a message to Election Buddy">
           <input
+            ref={inputRef}
             className={styles.chatInput}
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Ask about elections, voting, or your rights..."
             aria-label="Chat message input"
+            aria-describedby="chat-input-hint"
             id="chat-input"
             disabled={isLoading}
             maxLength={2000}
+            autoComplete="off"
           />
-          <button type="submit" className={styles.sendBtn} disabled={isLoading || !input.trim()} id="chat-send-btn">
+          <span id="chat-input-hint" className="sr-only">Maximum 2000 characters. Press Enter to send.</span>
+          <button type="submit" className={styles.sendBtn} disabled={isLoading || !input.trim()} id="chat-send-btn" aria-label={isLoading ? 'Sending message...' : 'Send message'}>
             {isLoading ? '⏳' : '📨'} Send
           </button>
         </form>

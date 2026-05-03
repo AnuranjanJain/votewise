@@ -2,7 +2,7 @@
 // VoteWise — Validators Test Suite
 // ============================================================
 
-import { validateChatMessage, validateAnalyticsEvent, validateAnalyticsBatch, validateCoordinates, validateImageData, validateQuizAnswer, sanitizeInput } from '@/lib/validators';
+import { validateChatMessage, validateAnalyticsEvent, validateAnalyticsBatch, validateCoordinates, validateImageData, validateQuizAnswer, sanitizeInput, validateUrl } from '@/lib/validators';
 
 describe('Validators', () => {
   describe('validateChatMessage', () => {
@@ -103,5 +103,31 @@ describe('Validators', () => {
       expect(result).not.toContain('<');
       expect(result).not.toContain('>');
     });
+  });
+
+  describe('validateAnalyticsEvent - prototype pollution', () => {
+    it('should reject __proto__ key', () => {
+      const event = JSON.parse('{"__proto__": {}, "eventType": "page_view", "source": "test"}');
+      expect(validateAnalyticsEvent(event).valid).toBe(false);
+    });
+  });
+
+  describe('validateQuizAnswer - prototype pollution', () => {
+    it('should reject __proto__ key', () => {
+      const answer = JSON.parse('{"__proto__": {}, "questionId": "q1", "selectedOption": 0}');
+      expect(validateQuizAnswer(answer).valid).toBe(false);
+    });
+  });
+
+  describe('validateUrl', () => {
+    it('should accept valid HTTP URL', () => { expect(validateUrl('https://example.com').valid).toBe(true); });
+    it('should accept valid path', () => { expect(validateUrl('/page').valid).toBe(true); });
+    it('should reject non-string', () => { expect(validateUrl(123).valid).toBe(false); });
+    it('should reject empty string', () => { expect(validateUrl('').valid).toBe(false); });
+    it('should reject javascript: scheme', () => { expect(validateUrl('javascript:alert(1)').valid).toBe(false); });
+    it('should reject data: scheme', () => { expect(validateUrl('data:text/html,<h1>hi</h1>').valid).toBe(false); });
+    it('should reject vbscript: scheme', () => { expect(validateUrl('vbscript:MsgBox').valid).toBe(false); });
+    it('should reject overly long URLs', () => { expect(validateUrl('https://x.com/' + 'a'.repeat(2048)).valid).toBe(false); });
+    it('should be case-insensitive for scheme check', () => { expect(validateUrl('JAVASCRIPT:alert(1)').valid).toBe(false); });
   });
 });

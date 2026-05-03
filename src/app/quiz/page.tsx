@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { QuizSession } from '@/types';
 import { createQuizSession, processAnswer, calculateQuizStats, getCurrentQuestion, isQuizComplete } from '@/lib/quiz-engine';
 import styles from './page.module.css';
@@ -11,12 +11,23 @@ export default function QuizPage() {
   const [category, setCategory] = useState('all');
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const firstOptionRef = useRef<HTMLButtonElement>(null);
+  const scoreRef = useRef<HTMLDivElement>(null);
 
   const startQuiz = useCallback(() => {
     setSession(createQuizSession(difficulty, category, 10));
     setSelectedOption(null);
     setShowExplanation(false);
   }, [difficulty, category]);
+
+  // Auto-focus first option when a new question appears
+  useEffect(() => {
+    if (session && !isQuizComplete(session) && selectedOption === null) {
+      // Small delay to ensure DOM update
+      const timer = setTimeout(() => firstOptionRef.current?.focus(), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [session?.currentIndex, selectedOption, session]);
 
   const handleAnswer = useCallback((optionIndex: number) => {
     if (!session || selectedOption !== null) return;
@@ -37,6 +48,21 @@ export default function QuizPage() {
     setShowExplanation(false);
   }, [session]);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, optionIndex: number, totalOptions: number) => {
+    let targetIndex: number | null = null;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      targetIndex = (optionIndex + 1) % totalOptions;
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      targetIndex = (optionIndex - 1 + totalOptions) % totalOptions;
+    }
+    if (targetIndex !== null) {
+      const target = document.getElementById(`option-${targetIndex}`);
+      target?.focus();
+    }
+  }, []);
+
   // Setup screen
   if (!session) {
     return (
@@ -46,7 +72,7 @@ export default function QuizPage() {
             <h1 className={styles.title}>🧠 Election Quiz</h1>
             <p className={styles.subtitle}>Test your knowledge of Indian elections</p>
           </div>
-          <div className={styles.setupCard}>
+          <div className={styles.setupCard} role="form" aria-label="Quiz configuration">
             <div className={styles.setupTitle}>Configure Your Quiz</div>
             <div className={styles.filters}>
               <div className={styles.filterGroup}>
@@ -85,10 +111,10 @@ export default function QuizPage() {
     return (
       <div className="page-content">
         <div className={styles.container}>
-          <div className={styles.resultsCard}>
-            <div className={styles.resultsGrade}>{stats.grade}</div>
-            <div className={styles.resultsMessage}>{stats.message}</div>
-            <div className={styles.scoreBoard}>
+          <div className={styles.resultsCard} role="region" aria-label="Quiz results">
+            <div className={styles.resultsGrade} aria-label={`Grade: ${stats.grade}`}>{stats.grade}</div>
+            <div className={styles.resultsMessage} role="status">{stats.message}</div>
+            <div className={styles.scoreBoard} aria-label="Score breakdown">
               <div className={styles.scoreStat}>
                 <div className={styles.scoreValue} style={{ color: 'var(--color-success)' }}>{stats.correctAnswers}</div>
                 <div className={styles.scoreLabel}>Correct</div>
@@ -125,7 +151,7 @@ export default function QuizPage() {
   return (
     <div className="page-content">
       <div className={styles.container}>
-        <div className={styles.scoreBoard}>
+        <div className={styles.scoreBoard} ref={scoreRef} aria-live="polite" aria-atomic="true" aria-label="Current score">
           <div className={styles.scoreStat}>
             <div className={styles.scoreValue}>{session.score}</div>
             <div className={styles.scoreLabel}>Points</div>
@@ -140,7 +166,7 @@ export default function QuizPage() {
           </div>
         </div>
 
-        <div className={styles.questionCard}>
+        <div className={styles.questionCard} role="region" aria-label={`Question ${session.currentIndex + 1} of ${session.questions.length}`}>
           <div className={styles.questionHeader}>
             <span className={styles.questionCount}>
               Question {session.currentIndex + 1} of {session.questions.length}
@@ -150,9 +176,9 @@ export default function QuizPage() {
             </span>
           </div>
 
-          <h2 className={styles.questionText}>{question.question}</h2>
+          <h2 className={styles.questionText} id="question-text">{question.question}</h2>
 
-          <div className={styles.options}>
+          <div className={styles.options} role="radiogroup" aria-labelledby="question-text" aria-required="true">
             {question.options.map((option, i) => {
               let optionClass = styles.option;
               if (selectedOption !== null) {
@@ -161,8 +187,19 @@ export default function QuizPage() {
                 else if (i === selectedOption && i !== question.correctAnswer) optionClass += ` ${styles.optionWrong}`;
               }
               return (
-                <button key={i} className={optionClass} onClick={() => handleAnswer(i)} disabled={selectedOption !== null} id={`option-${i}`}>
-                  <span className={styles.optionLetter}>{letters[i]}</span>
+                <button
+                  key={i}
+                  ref={i === 0 ? firstOptionRef : undefined}
+                  className={optionClass}
+                  onClick={() => handleAnswer(i)}
+                  onKeyDown={(e) => handleKeyDown(e, i, question.options.length)}
+                  disabled={selectedOption !== null}
+                  id={`option-${i}`}
+                  role="radio"
+                  aria-checked={selectedOption === i}
+                  aria-label={`Option ${letters[i]}: ${option}`}
+                >
+                  <span className={styles.optionLetter} aria-hidden="true">{letters[i]}</span>
                   {option}
                 </button>
               );
@@ -170,7 +207,7 @@ export default function QuizPage() {
           </div>
 
           {showExplanation && (
-            <div className={styles.explanation}>
+            <div className={styles.explanation} role="alert" aria-live="assertive">
               <div className={styles.explanationLabel}>
                 {selectedOption === question.correctAnswer ? '✅ Correct!' : '❌ Incorrect'}
               </div>
@@ -180,7 +217,7 @@ export default function QuizPage() {
           )}
 
           {selectedOption !== null && (
-            <button className={styles.nextBtn} onClick={handleNext} id="next-question-btn">
+            <button className={styles.nextBtn} onClick={handleNext} id="next-question-btn" autoFocus>
               {session.currentIndex + 1 >= session.questions.length ? '📊 View Results' : 'Next Question →'}
             </button>
           )}

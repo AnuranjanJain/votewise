@@ -1,39 +1,40 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { validateAnalyticsEvent, validateAnalyticsBatch } from '@/lib/validators';
-
-const SECURITY_HEADERS = { 'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Cache-Control': 'no-store' };
+import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
+import { analyticsLimiter, getClientId } from '@/lib/rate-limiter';
+import { VALID_EVENT_TYPES } from '@/lib/constants';
 
 export async function POST(request: NextRequest) {
+  const clientId = getClientId(request);
+  if (!analyticsLimiter.check(clientId)) {
+    return errorResponse('Too many requests. Please wait a moment.', 429);
+  }
+
+  const body = await safeParseBody<{ events?: unknown; event?: unknown }>(request);
+  if (!body) return errorResponse('Invalid request body', 400);
+
   try {
-    const body = await request.json();
     const { events, event } = body;
 
     if (events) {
       const validation = validateAnalyticsBatch(events);
-      if (!validation.valid) {
-        return NextResponse.json({ error: validation.error }, { status: 400, headers: SECURITY_HEADERS });
-      }
-      return NextResponse.json({ received: events.length, status: 'queued' }, { headers: SECURITY_HEADERS });
+      if (!validation.valid) return validationError(validation);
+      return successResponse({ received: (events as unknown[]).length, status: 'queued' });
     }
 
     if (event) {
       const validation = validateAnalyticsEvent(event);
-      if (!validation.valid) {
-        return NextResponse.json({ error: validation.error }, { status: 400, headers: SECURITY_HEADERS });
-      }
-      return NextResponse.json({ received: 1, status: 'queued' }, { headers: SECURITY_HEADERS });
+      if (!validation.valid) return validationError(validation);
+      return successResponse({ received: 1, status: 'queued' });
     }
 
-    return NextResponse.json({ error: 'Must provide event or events' }, { status: 400, headers: SECURITY_HEADERS });
+    return errorResponse('Must provide event or events', 400);
   } catch (error) {
     console.error('[VoteWise API] Analytics error:', error);
-    return NextResponse.json({ error: 'Analytics ingestion failed' }, { status: 500, headers: SECURITY_HEADERS });
+    return errorResponse('Analytics ingestion failed');
   }
 }
 
 export async function GET() {
-  return NextResponse.json(
-    { status: 'ok', service: 'VoteWise Analytics Pipeline', supportedTypes: ['page_view', 'chat_message', 'quiz_answer', 'quiz_complete', 'timeline_explore', 'map_interaction', 'resource_view', 'theme_toggle', 'accessibility_change', 'video_watch', 'glossary_search', 'fact_check'] },
-    { headers: SECURITY_HEADERS }
-  );
+  return serviceInfoResponse('VoteWise Analytics Pipeline', { supportedTypes: VALID_EVENT_TYPES });
 }

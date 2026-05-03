@@ -42,6 +42,12 @@ export function validateAnalyticsEvent(event: unknown): ValidationResult {
     return { valid: false, error: 'Event must be a non-null object' };
   }
   const e = event as Record<string, unknown>;
+
+  // Prototype pollution prevention
+  const keys = Object.keys(e);
+  if (keys.includes('__proto__') || keys.includes('prototype')) {
+    return { valid: false, error: 'Event contains disallowed keys' };
+  }
   if (!e.eventType || typeof e.eventType !== 'string') {
     return { valid: false, error: 'Event must have a string eventType' };
   }
@@ -132,6 +138,12 @@ export function validateQuizAnswer(answer: unknown): ValidationResult {
     return { valid: false, error: 'Answer must be a non-null object' };
   }
   const a = answer as Record<string, unknown>;
+
+  // Prototype pollution prevention
+  const keys = Object.keys(a);
+  if (keys.includes('__proto__') || keys.includes('prototype')) {
+    return { valid: false, error: 'Answer contains disallowed keys' };
+  }
   if (typeof a.questionId !== 'string' || a.questionId.length === 0) {
     return { valid: false, error: 'Answer must have a valid questionId' };
   }
@@ -143,6 +155,9 @@ export function validateQuizAnswer(answer: unknown): ValidationResult {
 
 /**
  * Strips potentially dangerous HTML/script content from user input.
+ *
+ * @param input - Raw user input string
+ * @returns Sanitized string with HTML entities escaped
  */
 export function sanitizeInput(input: string): string {
   return input
@@ -151,4 +166,27 @@ export function sanitizeInput(input: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;');
+}
+
+/**
+ * Validates a URL string for safety (no javascript: or data: schemes).
+ *
+ * @param url - The URL string to validate
+ * @returns Validation result indicating if the URL is safe
+ */
+export function validateUrl(url: unknown): ValidationResult {
+  if (typeof url !== 'string') {
+    return { valid: false, error: 'URL must be a string' };
+  }
+  if (url.length === 0) {
+    return { valid: false, error: 'URL cannot be empty' };
+  }
+  if (url.length > 2048) {
+    return { valid: false, error: 'URL exceeds maximum length of 2048 characters' };
+  }
+  const lower = url.toLowerCase().trim();
+  if (lower.startsWith('javascript:') || lower.startsWith('data:') || lower.startsWith('vbscript:')) {
+    return { valid: false, error: 'URL contains a disallowed scheme' };
+  }
+  return { valid: true };
 }

@@ -7,7 +7,7 @@
     <a href="#features"><img src="https://img.shields.io/badge/Gemini_2.0-Flash-blue?style=for-the-badge&logo=google" alt="Gemini AI"></a>
     <a href="#tech-stack"><img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" alt="Next.js"></a>
     <a href="#architecture"><img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript" alt="TypeScript"></a>
-    <img src="https://img.shields.io/badge/Tests-183_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
+    <img src="https://img.shields.io/badge/Tests-240_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
     <img src="https://img.shields.io/badge/Google_Services-14_Integrated-orange?style=for-the-badge&logo=googlecloud" alt="Google Services">
   </p>
 </div>
@@ -102,6 +102,31 @@ During the development of VoteWise, we made the following operational assumption
 
 ---
 
+## 🚀 Performance Optimization
+
+VoteWise implements multiple layers of performance optimization:
+
+- **LRU Caching**: All API responses (Gemini, Geocoding, Places, TTS, YouTube) are cached using an in-memory LRU cache with configurable TTL to minimize redundant API calls.
+- **Analytics Event Batching**: Client-side analytics events are queued and flushed in batches (every 10s or 20 events) instead of one-at-a-time writes, reducing Firestore write operations by up to 95%.
+- **Memoization & useCallback**: React components use `useMemo` and `useCallback` to prevent unnecessary re-renders and re-computations.
+- **Build Optimization**: Next.js is configured with `reactStrictMode`, compression, and static asset caching headers for production performance.
+
+## 🔒 Security Architecture
+
+- **Content Security Policy (CSP)**: Strict CSP headers restrict script sources, frame ancestors, and object embedding.
+- **Rate Limiting**: All 7 API routes are protected by sliding-window rate limiters with per-endpoint configuration.
+- **Input Sanitization**: All user inputs are validated AND sanitized before processing. Prototype pollution prevention is built into object validators.
+- **Security Headers**: Every API response includes X-Content-Type-Options, X-Frame-Options, HSTS, Permissions-Policy, and Referrer-Policy headers.
+
+## ♿ Accessibility Compliance
+
+- **WCAG 2.1 AA**: Skip-to-content link, focus-visible outlines, prefers-reduced-motion support, high-contrast mode.
+- **ARIA Patterns**: Proper `role="tablist"` with roving tabindex, `role="radiogroup"` for quiz options, `aria-live` regions for dynamic content.
+- **Keyboard Navigation**: Full arrow-key navigation for tabs and quiz options, proper focus management after interactions.
+- **Screen Reader Support**: `aria-label`, `aria-describedby`, `aria-busy`, `role="status"`, and `sr-only` elements throughout.
+
+---
+
 ## 💻 Tech Stack
 
 ### Frontend
@@ -137,11 +162,24 @@ During the development of VoteWise, we made the following operational assumption
    ```
 
 ## 🧪 Running Tests
-VoteWise maintains a strictly tested foundation with **183 passing tests**.
+VoteWise maintains a strictly tested foundation with **240 passing tests across 8 test suites**.
 ```bash
 # Run the test suite
 npm test
+
+# Run with coverage report
+npm test -- --coverage
 ```
+
+Test coverage includes:
+- ✅ LRU Cache (basic ops, eviction, TTL, purge)
+- ✅ Rate Limiter (sliding window, client tracking, expiry)
+- ✅ API Utilities (security headers, response helpers)
+- ✅ Validators (input validation, sanitization, prototype pollution, URL safety)
+- ✅ Quiz Engine (scoring, streaks, difficulty filtering)
+- ✅ Election Data (glossary, timeline, question bank)
+- ✅ Utility Helpers (formatting, democracy score, text truncation)
+- ✅ Constants (configuration integrity)
 
 <div align="center">
   <p>Built with ❤️ and ☕ for Prompt Wars</p>

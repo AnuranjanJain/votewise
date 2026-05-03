@@ -247,7 +247,8 @@ html[data-theme='dark'] .badge-info { color: var(--color-info); }
 }
 
 /* Accessibility */
-*:focus-visible { outline: 2px solid var(--brand-blue); outline-offset: 2px; border-radius: var(--radius-sm); }
+*:focus-visible { outline: 3px solid var(--brand-blue); outline-offset: 3px; border-radius: var(--radius-sm); }
+*:focus:not(:focus-visible) { outline: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; transform: none !important; }
 }
@@ -255,4 +256,21 @@ html[data-theme='dark'] .badge-info { color: var(--color-info); }
 html[data-theme='dark'] .high-contrast { --color-text-primary: #ffffff; --color-text-secondary: #ffffff; --color-text-muted: #eeeeee; --color-border: #ffffff; --color-bg-glass: #000000; }
 .large-text { font-size: 18px; }
 .large-text .section-title { font-size: 2.2rem; }
+
+/* Skip-to-content link — visible on focus */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+a.sr-only:focus {
+  position: fixed; top: 8px; left: 8px; z-index: 10000;
+  width: auto; height: auto; padding: 12px 24px; margin: 0;
+  clip: auto; white-space: normal; overflow: visible;
+  background: var(--brand-blue); color: #fff;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+  border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+  text-decoration: none;
+}
+
+/* Form focus-within enhancement */
+form:focus-within { outline: 2px solid var(--color-accent-glow); outline-offset: 4px; border-radius: var(--radius-md); }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--brand-blue); outline-offset: 2px; border-radius: var(--radius-sm); }
+button:focus-visible { outline: 3px solid var(--brand-blue); outline-offset: 3px; border-radius: var(--radius-sm); }
+

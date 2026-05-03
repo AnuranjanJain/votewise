@@ -6,10 +6,16 @@
 
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { ELECTION_SYSTEM_PROMPT } from './election-data';
-import { GEMINI_CONFIG } from './constants';
+import { GEMINI_CONFIG, CACHE_TTL } from './constants';
+import { LRUCache } from './cache';
 
+/** Singleton instances */
 let genAI: GoogleGenerativeAI | null = null;
 let model: GenerativeModel | null = null;
+
+/** Response caches for deduplication and performance */
+const quizCache = new LRUCache<string>(30, CACHE_TTL.QUIZ_QUESTIONS);
+const chatCache = new LRUCache<string>(50, CACHE_TTL.CHAT_RESPONSES);
 
 /**
  * Retrieves or initializes the Gemini model singleton.
@@ -31,6 +37,10 @@ function getModel(): GenerativeModel | null {
 /**
  * Sends a chat message to Gemini and returns the response.
  * Falls back to deterministic responses when API is unavailable.
+ *
+ * @param message - The user's message text
+ * @param history - Previous conversation turns for context
+ * @returns The AI-generated response string
  */
 export async function chatWithGemini(
   message: string,
@@ -38,6 +48,13 @@ export async function chatWithGemini(
 ): Promise<string> {
   const geminiModel = getModel();
   if (!geminiModel) return getFallbackResponse(message);
+
+  // Check cache for identical standalone messages (no history context)
+  const cacheKey = history.length === 0 ? `chat:${message.toLowerCase().trim()}` : '';
+  if (cacheKey) {
+    const cached = chatCache.get(cacheKey);
+    if (cached) return cached;
+  }
 
   try {
     const chat = geminiModel.startChat({
@@ -47,7 +64,10 @@ export async function chatWithGemini(
       })),
     });
     const result = await chat.sendMessage(message);
-    return result.response.text();
+    const response = result.response.text();
+
+    if (cacheKey) chatCache.set(cacheKey, response);
+    return response;
   } catch (error) {
     console.error('Gemini API error:', error);
     return getFallbackResponse(message);
@@ -56,15 +76,25 @@ export async function chatWithGemini(
 
 /**
  * Generates quiz questions using Gemini AI.
- * Falls back to the pre-built question bank when unavailable.
+ * Results are cached by topic, difficulty, and count to avoid
+ * redundant API calls for identical requests.
+ *
+ * @param topic - The quiz topic (e.g., "voting process")
+ * @param difficulty - Question difficulty level
+ * @param count - Number of questions to generate
+ * @returns JSON string of generated quiz questions
  */
 export async function generateQuizQuestions(
   topic: string,
   difficulty: string = 'intermediate',
   count: number = 5
 ): Promise<string> {
+  const cacheKey = `quiz:${topic}:${difficulty}:${count}`;
+  const cached = quizCache.get(cacheKey);
+  if (cached) return cached;
+
   const geminiModel = getModel();
-  if (!geminiModel) return getFallbackQuizResponse(topic);
+  if (!geminiModel) return getFallbackQuizResponse();
 
   try {
     const prompt = `Generate ${count} multiple choice quiz questions about "${topic}" in the context of Indian elections. Difficulty: ${difficulty}.
@@ -86,16 +116,22 @@ Rules:
 - Return ONLY valid JSON array`;
 
     const result = await geminiModel.generateContent(prompt);
-    return result.response.text();
+    const response = result.response.text();
+    quizCache.set(cacheKey, response);
+    return response;
   } catch (error) {
     console.error('Gemini quiz generation error:', error);
-    return getFallbackQuizResponse(topic);
+    return getFallbackQuizResponse();
   }
 }
 
 /**
  * Simplifies complex election text for easier understanding.
  * Adjusts reading level based on the target audience.
+ *
+ * @param text - The complex text to simplify
+ * @param level - Target audience reading level
+ * @returns Simplified version of the input text
  */
 export async function simplifyText(
   text: string,
@@ -118,6 +154,10 @@ export async function simplifyText(
 
 /**
  * Translates text using Gemini AI.
+ *
+ * @param text - The text to translate
+ * @param targetLanguage - The language to translate into
+ * @returns The translated text
  */
 export async function translateMessage(
   text: string,
@@ -139,6 +179,9 @@ export async function translateMessage(
 
 /**
  * Fact-checks an election claim using Gemini AI.
+ *
+ * @param claim - The claim to fact-check
+ * @returns Fact-check result with verdict, explanation, and source
  */
 export async function factCheckClaim(claim: string): Promise<string> {
   const geminiModel = getModel();
@@ -178,7 +221,7 @@ function getFallbackResponse(message: string): string {
   return "👋 I'm **Election Buddy**, your AI-powered guide to understanding Indian elections!\n\nI can help you with:\n- 🗳️ How to vote and register\n- 📅 Election process and timeline\n- 📋 Your rights as a voter\n- 🏛️ How government is formed\n- 📊 Election facts and statistics\n\nWhat would you like to know?";
 }
 
-function getFallbackQuizResponse(topic: string): string {
+function getFallbackQuizResponse(): string {
   return JSON.stringify([{
     question: `What is the primary body that conducts elections in India?`,
     options: ['Supreme Court', 'Parliament', 'Election Commission of India', 'President'],

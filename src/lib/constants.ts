@@ -29,6 +29,8 @@ export const VALID_EVENT_TYPES = [
   'video_watch',
   'glossary_search',
   'fact_check',
+  'performance_metric',
+  'error',
 ] as const;
 
 /** Quiz configuration */
@@ -87,6 +89,22 @@ export const APP_META = {
   TAGLINE: 'Your AI-Powered Guide to Democracy',
   VERSION: '1.0.0',
   AUTHOR: 'VoteWise Team',
+} as const;
+
+/** Cache TTL constants (milliseconds) */
+export const CACHE_TTL = {
+  QUIZ_QUESTIONS: 10 * 60 * 1000,
+  GEOCODE_RESULTS: 30 * 60 * 1000,
+  PLACES_RESULTS: 5 * 60 * 1000,
+  YOUTUBE_RESULTS: 15 * 60 * 1000,
+  CHAT_RESPONSES: 5 * 60 * 1000,
+  TTS_RESULTS: 60 * 60 * 1000,
+} as const;
+
+/** Analytics event batch configuration */
+export const ANALYTICS_BATCH = {
+  MAX_QUEUE_SIZE: 20,
+  FLUSH_INTERVAL_MS: 10_000,
 } as const;
 
 /** Badge definitions for gamification */
