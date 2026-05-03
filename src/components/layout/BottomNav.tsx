@@ -25,9 +25,9 @@ export default function BottomNav() {
             className={`${styles.navItem} ${pathname === item.href ? styles.active : ''}`}
             aria-current={pathname === item.href ? 'page' : undefined}
           >
-            <span className={styles.navIcon}>{item.icon}</span>
+            <span className={styles.navIcon} aria-hidden="true">{item.icon}</span>
             {item.label}
-            {pathname === item.href && <span className={styles.activeIndicator} />}
+            {pathname === item.href && <span className={styles.activeIndicator} aria-hidden="true" />}
           </Link>
         ))}
       </div>

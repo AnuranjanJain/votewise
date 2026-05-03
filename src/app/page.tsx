@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className={styles.heroContent}>
           <div className={styles.glassPane}>
             <div className={styles.heroIconContainer}>
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
               </svg>
@@ -130,7 +130,15 @@ export default function HomePage() {
                 ? 'You\'re a democracy champion! 🏆'
                 : 'Keep exploring to increase your score!'}
           </div>
-          <div className="progress-bar" style={{ maxWidth: '400px', margin: '24px auto 0' }}>
+          <div
+            className="progress-bar"
+            style={{ maxWidth: '400px', margin: '24px auto 0' }}
+            role="progressbar"
+            aria-label="Democracy learning progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress.democracyScore}
+          >
             <div
               className="progress-fill"
               style={{
@@ -154,7 +162,7 @@ export default function HomePage() {
               style={{ transitionDelay: `${i * 0.1}s` }}
               id={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
             >
-              <span className={styles.featureIcon}>{feature.icon}</span>
+              <span className={styles.featureIcon} aria-hidden="true">{feature.icon}</span>
               <h3 className={styles.featureTitle}>{feature.title}</h3>
               <p className={styles.featureDesc}>{feature.desc}</p>
               <span className={styles.featureTag}>{feature.tag}</span>
@@ -173,7 +181,7 @@ export default function HomePage() {
               className={`${styles.servicePill} ${styles.reveal}`}
               style={{ transitionDelay: `${i * 0.05}s` }}
             >
-              <span>{service.icon}</span>
+              <span aria-hidden="true">{service.icon}</span>
               <span>{service.name}</span>
             </div>
           ))}

@@ -1,7 +1,8 @@
 import type { NextRequest } from 'next/server';
 import { getRandomQuestions } from '@/lib/election-data';
 import { generateQuizQuestions } from '@/lib/gemini';
-import { successResponse, errorResponse, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
+import { validateQuizRequest } from '@/lib/validators';
+import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { quizLimiter, getClientId } from '@/lib/rate-limiter';
 
 export async function POST(request: NextRequest) {
@@ -15,6 +16,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const { topic, difficulty, count, useAI, category } = body;
+    const validation = validateQuizRequest(difficulty, category, count, topic, useAI);
+    if (!validation.valid) return validationError(validation);
 
     if (useAI && topic) {
       const aiQuestions = await generateQuizQuestions(topic, difficulty || 'intermediate', count || 5);

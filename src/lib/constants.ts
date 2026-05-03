@@ -6,11 +6,51 @@
 /** Maximum length for chat messages (characters) */
 export const MAX_CHAT_MESSAGE_LENGTH = 2000;
 
+/** Maximum chat history messages accepted by the API */
+export const MAX_CHAT_HISTORY_MESSAGES = 12;
+
+/** Maximum text parts accepted in each chat history message */
+export const MAX_CHAT_HISTORY_PARTS = 4;
+
 /** Maximum analytics events per batch */
 export const MAX_ANALYTICS_BATCH_SIZE = 50;
 
 /** Maximum metadata keys per analytics event */
 export const MAX_METADATA_KEYS = 20;
+
+/** Maximum text accepted for text-to-speech synthesis */
+export const MAX_TTS_TEXT_LENGTH = 5000;
+
+/** Maximum search query length for public search integrations */
+export const MAX_SEARCH_QUERY_LENGTH = 120;
+
+/** Nearby-place search radius bounds in meters */
+export const PLACE_SEARCH_RADIUS = {
+  MIN_METERS: 100,
+  MAX_METERS: 5000,
+  DEFAULT_METERS: 2000,
+} as const;
+
+/** Place types allowed by the polling station finder proxy */
+export const VALID_PLACE_TYPES = [
+  'school',
+  'local_government_office',
+  'city_hall',
+  'courthouse',
+  'point_of_interest',
+] as const;
+
+/** Cloud TTS language codes exposed by the app */
+export const SUPPORTED_TTS_LANGUAGE_CODES = [
+  'en-IN',
+  'hi-IN',
+  'ta-IN',
+  'te-IN',
+  'bn-IN',
+  'mr-IN',
+  'gu-IN',
+  'kn-IN',
+] as const;
 
 /** Maximum image upload size (5MB) */
 export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -36,6 +76,7 @@ export const VALID_EVENT_TYPES = [
 /** Quiz configuration */
 export const QUIZ_CONFIG = {
   QUESTIONS_PER_SESSION: 10,
+  MAX_QUESTIONS_PER_REQUEST: 20,
   TIME_PER_QUESTION_SECONDS: 30,
   STREAK_BONUS_THRESHOLD: 3,
   STREAK_BONUS_POINTS: 5,
@@ -43,6 +84,18 @@ export const QUIZ_CONFIG = {
   BASE_POINTS_WRONG: 0,
   MAX_DIFFICULTY_LEVELS: 3,
 } as const;
+
+/** Quiz filters accepted by the public quiz API */
+export const VALID_QUIZ_DIFFICULTIES = ['beginner', 'intermediate', 'expert', 'all'] as const;
+export const VALID_QUIZ_CATEGORIES = [
+  'process',
+  'history',
+  'rights',
+  'constitution',
+  'current-affairs',
+  'institutions',
+  'all',
+] as const;
 
 /** Election timeline configuration */
 export const TIMELINE_CONFIG = {

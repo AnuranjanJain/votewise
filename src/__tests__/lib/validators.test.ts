@@ -2,7 +2,21 @@
 // VoteWise — Validators Test Suite
 // ============================================================
 
-import { validateChatMessage, validateAnalyticsEvent, validateAnalyticsBatch, validateCoordinates, validateImageData, validateQuizAnswer, sanitizeInput, validateUrl } from '@/lib/validators';
+import {
+  validateChatMessage,
+  validateChatHistory,
+  validateAnalyticsEvent,
+  validateAnalyticsBatch,
+  validateCoordinates,
+  validateImageData,
+  validateQuizAnswer,
+  validateQuizRequest,
+  validatePlaceSearch,
+  validateTtsRequest,
+  validateSearchQuery,
+  sanitizeInput,
+  validateUrl,
+} from '@/lib/validators';
 
 describe('Validators', () => {
   describe('validateChatMessage', () => {
@@ -20,6 +34,29 @@ describe('Validators', () => {
       expect(validateChatMessage(maxMsg).valid).toBe(true);
     });
     it('should accept messages with special characters', () => { expect(validateChatMessage('What is EVM? 🗳️').valid).toBe(true); });
+  });
+
+  describe('validateChatHistory', () => {
+    const validHistory = [{ role: 'user', parts: [{ text: 'What is EVM?' }] }];
+    it('should accept missing history', () => { expect(validateChatHistory(undefined).valid).toBe(true); });
+    it('should accept valid history', () => { expect(validateChatHistory(validHistory).valid).toBe(true); });
+    it('should reject non-array history', () => { expect(validateChatHistory({}).valid).toBe(false); });
+    it('should reject too many messages', () => {
+      expect(validateChatHistory(Array(13).fill(validHistory[0])).valid).toBe(false);
+    });
+    it('should reject invalid roles', () => {
+      expect(validateChatHistory([{ role: 'admin', parts: [{ text: 'x' }] }]).valid).toBe(false);
+    });
+    it('should reject empty parts', () => {
+      expect(validateChatHistory([{ role: 'user', parts: [] }]).valid).toBe(false);
+    });
+    it('should reject oversized part text', () => {
+      expect(validateChatHistory([{ role: 'user', parts: [{ text: 'a'.repeat(2001) }] }]).valid).toBe(false);
+    });
+    it('should reject prototype pollution keys', () => {
+      const history = [JSON.parse('{"constructor": {}, "role": "user", "parts": [{"text": "x"}]}')];
+      expect(validateChatHistory(history).valid).toBe(false);
+    });
   });
 
   describe('validateAnalyticsEvent', () => {
@@ -43,6 +80,10 @@ describe('Validators', () => {
       const meta: Record<string, string> = {};
       for (let i = 0; i < 21; i++) meta[`k${i}`] = 'v';
       expect(validateAnalyticsEvent({ ...validEvent, metadata: meta }).valid).toBe(false);
+    });
+    it('should reject metadata with disallowed keys', () => {
+      const metadata = JSON.parse('{"constructor": {}, "safe": true}');
+      expect(validateAnalyticsEvent({ ...validEvent, metadata }).valid).toBe(false);
     });
   });
 
@@ -116,6 +157,67 @@ describe('Validators', () => {
     it('should reject __proto__ key', () => {
       const answer = JSON.parse('{"__proto__": {}, "questionId": "q1", "selectedOption": 0}');
       expect(validateQuizAnswer(answer).valid).toBe(false);
+    });
+  });
+
+  describe('validateQuizRequest', () => {
+    it('should accept default filters', () => {
+      expect(validateQuizRequest(undefined, undefined, undefined, undefined, undefined).valid).toBe(true);
+    });
+    it('should accept valid AI quiz request', () => {
+      expect(validateQuizRequest('beginner', 'process', 5, 'voter registration', true).valid).toBe(true);
+    });
+    it('should reject invalid difficulty', () => {
+      expect(validateQuizRequest('hard', 'process', 5, undefined, false).valid).toBe(false);
+    });
+    it('should reject invalid category', () => {
+      expect(validateQuizRequest('beginner', 'party-politics', 5, undefined, false).valid).toBe(false);
+    });
+    it('should reject invalid count', () => {
+      expect(validateQuizRequest('beginner', 'process', 21, undefined, false).valid).toBe(false);
+    });
+    it('should require a topic for AI quiz requests', () => {
+      expect(validateQuizRequest('beginner', 'process', 5, '', true).valid).toBe(false);
+    });
+  });
+
+  describe('validatePlaceSearch', () => {
+    it('should accept supported place types and radius', () => {
+      expect(validatePlaceSearch('school', 1000).valid).toBe(true);
+    });
+    it('should reject unsupported place types', () => {
+      expect(validatePlaceSearch('restaurant', 1000).valid).toBe(false);
+    });
+    it('should reject radius outside bounds', () => {
+      expect(validatePlaceSearch('school', 10).valid).toBe(false);
+      expect(validatePlaceSearch('school', 6000).valid).toBe(false);
+    });
+  });
+
+  describe('validateTtsRequest', () => {
+    it('should accept valid TTS request', () => {
+      expect(validateTtsRequest('Read this', 'en-IN', 'NEUTRAL', 1).valid).toBe(true);
+    });
+    it('should reject empty text', () => {
+      expect(validateTtsRequest('', 'en-IN', 'NEUTRAL', 1).valid).toBe(false);
+    });
+    it('should reject unsupported language and gender', () => {
+      expect(validateTtsRequest('Read this', 'en-US', 'NEUTRAL', 1).valid).toBe(false);
+      expect(validateTtsRequest('Read this', 'en-IN', 'ROBOT', 1).valid).toBe(false);
+    });
+    it('should reject speaking rates outside provider bounds', () => {
+      expect(validateTtsRequest('Read this', 'en-IN', 'NEUTRAL', 0.1).valid).toBe(false);
+      expect(validateTtsRequest('Read this', 'en-IN', 'NEUTRAL', 5).valid).toBe(false);
+    });
+  });
+
+  describe('validateSearchQuery', () => {
+    it('should accept normal search queries', () => {
+      expect(validateSearchQuery('election process').valid).toBe(true);
+    });
+    it('should reject empty and long search queries', () => {
+      expect(validateSearchQuery('').valid).toBe(false);
+      expect(validateSearchQuery('a'.repeat(121)).valid).toBe(false);
     });
   });
 

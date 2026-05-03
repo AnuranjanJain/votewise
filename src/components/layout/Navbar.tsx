@@ -39,7 +39,7 @@ export default function Navbar() {
     <div className={styles.navbarWrapper}>
       <nav className={styles.navbar} role="navigation" aria-label="Main navigation">
         <Link href="/" className={styles.brand} aria-label="VoteWise Home">
-          <span className={styles.logo}>🗳️</span>
+          <span className={styles.logo} aria-hidden="true">🗳️</span>
           <span className={styles.brandName}>VoteWise</span>
         </Link>
 
@@ -52,15 +52,15 @@ export default function Navbar() {
               className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
               aria-current={pathname === item.href ? 'page' : undefined}
             >
-              <span className={styles.navIcon}>{item.icon}</span>
+              <span className={styles.navIcon} aria-hidden="true">{item.icon}</span>
               {item.label}
             </Link>
           ))}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-          <div className={styles.scoreChip} aria-label={`Democracy Score: ${progress.democracyScore}`}>
-            🏆 {progress.democracyScore}%
+          <div className={styles.scoreChip} aria-label={`Democracy Score: ${progress.democracyScore}%`}>
+            <span aria-hidden="true">🏆</span> {progress.democracyScore}%
           </div>
           <ThemeToggle />
         </div>

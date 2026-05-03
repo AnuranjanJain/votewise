@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { searchNearbyPlaces } from '@/lib/google-cloud';
-import { validateCoordinates } from '@/lib/validators';
+import { PLACE_SEARCH_RADIUS } from '@/lib/constants';
+import { validateCoordinates, validatePlaceSearch } from '@/lib/validators';
 import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { placesLimiter, getClientId } from '@/lib/rate-limiter';
 
@@ -17,11 +18,10 @@ export async function POST(request: NextRequest) {
     const { lat, lng, type, radius } = body;
     const validation = validateCoordinates(lat, lng);
     if (!validation.valid) return validationError(validation);
-    if (!type || typeof type !== 'string') {
-      return errorResponse('Place type is required', 400);
-    }
-    const clampedRadius = Math.max(100, Math.min(5000, radius || 2000));
-    const results = await searchNearbyPlaces(lat as number, lng as number, type, clampedRadius);
+    const placeValidation = validatePlaceSearch(type, radius);
+    if (!placeValidation.valid) return validationError(placeValidation);
+    const clampedRadius = radius ?? PLACE_SEARCH_RADIUS.DEFAULT_METERS;
+    const results = await searchNearbyPlaces(lat as number, lng as number, type as string, clampedRadius);
     return successResponse({ places: results, count: results.length });
   } catch (error) {
     console.error('[VoteWise API] Places error:', error);

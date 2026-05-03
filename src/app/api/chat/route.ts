@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { chatWithGemini } from '@/lib/gemini';
-import { validateChatMessage, sanitizeInput } from '@/lib/validators';
+import { validateChatMessage, validateChatHistory, sanitizeInput } from '@/lib/validators';
 import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { chatLimiter, getClientId } from '@/lib/rate-limiter';
 
@@ -17,6 +17,8 @@ export async function POST(request: NextRequest) {
     const { message, history } = body;
     const validation = validateChatMessage(message);
     if (!validation.valid) return validationError(validation);
+    const historyValidation = validateChatHistory(history);
+    if (!historyValidation.valid) return validationError(historyValidation);
 
     const sanitizedMessage = sanitizeInput(message as string);
     const response = await chatWithGemini(sanitizedMessage, history || []);

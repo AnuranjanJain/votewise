@@ -5,9 +5,9 @@
   
   <p>
     <a href="#features"><img src="https://img.shields.io/badge/Gemini_2.0-Flash-blue?style=for-the-badge&logo=google" alt="Gemini AI"></a>
-    <a href="#tech-stack"><img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" alt="Next.js"></a>
+    <a href="#tech-stack"><img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js"></a>
     <a href="#architecture"><img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript" alt="TypeScript"></a>
-    <img src="https://img.shields.io/badge/Tests-240_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
+    <img src="https://img.shields.io/badge/Tests-280_Passing-brightgreen?style=for-the-badge&logo=jest" alt="Tests">
     <img src="https://img.shields.io/badge/Google_Services-14_Integrated-orange?style=for-the-badge&logo=googlecloud" alt="Google Services">
   </p>
 </div>
@@ -155,13 +155,33 @@ VoteWise implements multiple layers of performance optimization:
    ```
    *(Add your Gemini, Maps, Cloud, and Firebase keys to `.env.local`)*
 
+### 🔐 Environment Variables
+
+Core keys (see `.env.example` for the full list):
+- `GEMINI_API_KEY` (or `NEXT_PUBLIC_GEMINI_API_KEY` for client-side fallback)
+- `GOOGLE_MAPS_API_KEY`
+- `GOOGLE_CLOUD_API_KEY` (Cloud Translation / Text-to-Speech if enabled in your project)
+- Firebase config values (project-specific)
+
 3. Start the development server:
    ```bash
    npm run dev
    ```
 
+### ✅ Quality Gates
+
+Run the same checks used in CI-style review:
+```bash
+npm run validate
+```
+
+Production build check:
+```bash
+npm run build
+```
+
 ## 🧪 Running Tests
-VoteWise maintains a strictly tested foundation with **240 passing tests across 8 test suites**.
+VoteWise maintains a strictly tested foundation with **280 passing tests across 9 test suites**.
 ```bash
 # Run the test suite
 npm test

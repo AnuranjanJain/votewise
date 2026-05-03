@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "lint:strict": "eslint src/ --max-warnings 0",
     "type-check": "tsc --noEmit",
     "test": "jest",

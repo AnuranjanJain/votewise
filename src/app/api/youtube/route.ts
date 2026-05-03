@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { searchElectionVideos } from '@/lib/youtube';
-import { successResponse, errorResponse, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
+import { validateSearchQuery } from '@/lib/validators';
+import { successResponse, errorResponse, validationError, safeParseBody, serviceInfoResponse } from '@/lib/api-utils';
 import { youtubeLimiter, getClientId } from '@/lib/rate-limiter';
 
 export async function POST(request: NextRequest) {
@@ -14,10 +15,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const { query: searchQuery, maxResults } = body;
-    if (!searchQuery || typeof searchQuery !== 'string') {
-      return errorResponse('Query is required', 400);
-    }
-    const videos = await searchElectionVideos(searchQuery, Math.min(maxResults || 6, 10));
+    const validation = validateSearchQuery(searchQuery);
+    if (!validation.valid) return validationError(validation);
+    const limit = typeof maxResults === 'number' && Number.isFinite(maxResults)
+      ? Math.min(Math.max(Math.floor(maxResults), 1), 10)
+      : 6;
+    const videos = await searchElectionVideos(searchQuery, limit);
     return successResponse({ videos, count: videos.length });
   } catch (error) {
     console.error('[VoteWise API] YouTube error:', error);

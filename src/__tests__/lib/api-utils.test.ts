@@ -35,6 +35,17 @@ describe('API Utilities', () => {
       expect(SECURITY_HEADERS['Referrer-Policy']).toBe('strict-origin-when-cross-origin');
     });
 
+    it('should include transport and permission hardening headers', () => {
+      expect(SECURITY_HEADERS['Strict-Transport-Security']).toContain('includeSubDomains');
+      expect(SECURITY_HEADERS['Permissions-Policy']).toContain('camera=()');
+    });
+
+    it('should include cross-origin isolation headers', () => {
+      expect(SECURITY_HEADERS['Cross-Origin-Opener-Policy']).toBe('same-origin');
+      expect(SECURITY_HEADERS['Cross-Origin-Resource-Policy']).toBe('same-origin');
+      expect(SECURITY_HEADERS['Origin-Agent-Cluster']).toBe('?1');
+    });
+
     it('should include X-DNS-Prefetch-Control', () => {
       expect(SECURITY_HEADERS['X-DNS-Prefetch-Control']).toBe('off');
     });
